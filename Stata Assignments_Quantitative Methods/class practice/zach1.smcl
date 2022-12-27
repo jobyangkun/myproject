@@ -1,0 +1,181 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}P:\665\zach1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}25 Sep 2017, 11:22:58
+
+{com}. view "P:\665\zach1.smcl"
+
+. use "P:\665\hh_98.dta", clear
+
+. 
+. des
+
+{txt}Contains data from {res}P:\665\hh_98.dta
+{txt}  obs:{res}         1,129                          
+{txt} vars:{res}            24                          1 Apr 2009 12:04
+{txt} size:{res}       115,158                          
+{txt}{hline}
+              storage  display     value
+variable name   type   format      label      variable label
+{hline}
+{p 0 48}{res}{bind:nh             }{txt}{bind: double }{bind:{txt}%7.0f      }{space 1}{bind:         }{bind:  }{res}{res}HH ID{p_end}
+{p 0 48}{bind:year           }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}Year of observation{p_end}
+{p 0 48}{bind:villid         }{txt}{bind: double }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}Village ID{p_end}
+{p 0 48}{bind:thanaid        }{txt}{bind: double }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}Thana ID{p_end}
+{p 0 48}{bind:agehead        }{txt}{bind: float  }{bind:{txt}%3.0f      }{space 1}{bind:         }{bind:  }{res}{res}Age of HH head: years{p_end}
+{p 0 48}{bind:sexhead        }{txt}{bind: float  }{bind:{txt}%2.0f      }{space 1}{bind:         }{bind:  }{res}{res}Gender of HH head: 1=M, 0=F{p_end}
+{p 0 48}{bind:educhead       }{txt}{bind: float  }{bind:{txt}%2.0f      }{space 1}{bind:         }{bind:  }{res}{res}Education of HH head: years{p_end}
+{p 0 48}{bind:famsize        }{txt}{bind: float  }{bind:{txt}%9.2f      }{space 1}{bind:         }{bind:  }{res}{res}HH size{p_end}
+{p 0 48}{bind:hhland         }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH land: decimals{p_end}
+{p 0 48}{bind:hhasset        }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH total asset: Tk.{p_end}
+{p 0 48}{bind:expfd          }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH per capita food expenditure: Tk/year{p_end}
+{p 0 48}{bind:expnfd         }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH per capita nonfood expenditure: Tk/year{p_end}
+{p 0 48}{bind:exptot         }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH per capita total expenditure: Tk/year{p_end}
+{p 0 48}{bind:dmmfd          }{txt}{bind: byte   }{bind:{txt}%8.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH has male microcredit participant: 1=Y, 0=N{p_end}
+{p 0 48}{bind:dfmfd          }{txt}{bind: byte   }{bind:{txt}%8.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH has female microcredit participant: 1=Y, 0=N{p_end}
+{p 0 48}{bind:weight         }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}HH sampling weight{p_end}
+{p 0 48}{bind:vaccess        }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}Village is accessible by road all year: 1=Y, 0=N{p_end}
+{p 0 48}{bind:pcirr          }{txt}{bind: float  }{bind:{txt}%9.0g      }{space 1}{bind:         }{bind:  }{res}{res}Proportion of village land irrigated{p_end}
+{p 0 48}{bind:rice           }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of rice: Tk./kg{p_end}
+{p 0 48}{bind:wheat          }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of wheat: Tk./kg{p_end}
+{p 0 48}{bind:milk           }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of milk: Tk./liter{p_end}
+{p 0 48}{bind:potato         }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of potato: Tk./kg{p_end}
+{p 0 48}{bind:egg            }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of egg: Tk./4 counts{p_end}
+{p 0 48}{bind:oil            }{txt}{bind: float  }{bind:{txt}%9.3f      }{space 1}{bind:         }{bind:  }{res}{res}Village price of edible oil: Tk./kg{p_end}
+{txt}{hline}
+Sorted by:  {res}nh
+
+{com}. 
+. su
+
+{txt}    Variable {c |}       Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 56}
+{space 10}nh {c |}{res}      1129    169970.4    87505.85      11054     323103
+{txt}{space 8}year {c |}{res}      1129           1           0          1          1
+{txt}{space 6}villid {c |}{res}      1129    2.178919    .9471206          1          4
+{txt}{space 5}thanaid {c |}{res}      1129    16.77236    8.752229          1         32
+{txt}{space 5}agehead {c |}{res}      1129     46.0124    12.67865         18         95
+{txt}{hline 13}{c +}{hline 56}
+{space 5}sexhead {c |}{res}      1129    .9078831    .2893191          0          1
+{txt}{space 4}educhead {c |}{res}      1129    2.317095     3.47617          0         16
+{txt}{space 5}famsize {c |}{res}      1129    5.300266     2.20517          1         18
+{txt}{space 6}hhland {c |}{res}      1129    76.83225    204.0166         .2       4208
+{txt}{space 5}hhasset {c |}{res}      1129    155576.4    849719.9          1   2.42e+07
+{txt}{hline 13}{c +}{hline 56}
+{space 7}expfd {c |}{res}      1129    3660.191    1558.638   945.3242   15270.67
+{txt}{space 6}expnfd {c |}{res}      1129    1813.078    3316.891   89.54749   43411.15
+{txt}{space 6}exptot {c |}{res}      1129    5473.268    4140.221   1193.328   47981.01
+{txt}{space 7}dmmfd {c |}{res}      1129    .1948627    .3962705          0          1
+{txt}{space 7}dfmfd {c |}{res}      1129    .5270151    .4994909          0          1
+{txt}{hline 13}{c +}{hline 56}
+{space 6}weight {c |}{res}      1129    .9973043    .8185954       .125          5
+{txt}{space 5}vaccess {c |}{res}      1129    .8352524     .371117          0          1
+{txt}{space 7}pcirr {c |}{res}      1129    .5603686    .3320238          0        .99
+{txt}{space 8}rice {c |}{res}      1129    10.28298    1.566328   6.879596    15.4509
+{txt}{space 7}wheat {c |}{res}      1129    7.466872    .8467278   5.413453   9.473542
+{txt}{hline 13}{c +}{hline 56}
+{space 8}milk {c |}{res}      1129    10.89583    3.381805   6.766816   20.30045
+{txt}{space 6}potato {c |}{res}      1129    6.958305    1.059905   4.655296   10.45534
+{txt}{space 9}egg {c |}{res}      1129    1.953326    .3740207   1.353363   2.706726
+{txt}{space 9}oil {c |}{res}      1129    39.40337    4.008882   23.00717   50.75112
+
+{com}. 
+. tab milk
+
+    {txt}Village {c |}
+   price of {c |}
+      milk: {c |}
+  Tk./liter {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+      6.767 {c |}{res}        131       11.60       11.60
+{txt}      7.443 {c |}{res}          8        0.71       12.31
+{txt}      8.120 {c |}{res}        249       22.05       34.37
+{txt}      8.797 {c |}{res}         11        0.97       35.34
+{txt}      9.474 {c |}{res}        139       12.31       47.65
+{txt}     10.150 {c |}{res}         10        0.89       48.54
+{txt}     10.827 {c |}{res}        205       18.16       66.70
+{txt}     11.504 {c |}{res}         15        1.33       68.02
+{txt}     12.180 {c |}{res}         58        5.14       73.16
+{txt}     13.534 {c |}{res}        157       13.91       87.07
+{txt}     16.240 {c |}{res}         20        1.77       88.84
+{txt}     16.917 {c |}{res}         57        5.05       93.89
+{txt}     17.594 {c |}{res}         10        0.89       94.77
+{txt}     18.947 {c |}{res}         50        4.43       99.20
+{txt}     20.300 {c |}{res}          9        0.80      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}      1,129      100.00
+
+{com}. 
+. *hist milk
+
+. 
+. 
+. 
+. hist hhland
+{txt}(bin={res}30{txt}, start={res}.2{txt}, width={res}140.26{txt})
+{res}
+{com}. 
+. sum hhland,d
+
+                      {txt}HH land: decimals
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res}        1             .2
+{txt} 5%    {res}        1             .5
+{txt}10%    {res}        1              1       {txt}Obs         {res}       1129
+{txt}25%    {res}        4              1       {txt}Sum of Wgt. {res}       1129
+
+{txt}50%    {res}       15                      {txt}Mean          {res} 76.83225
+                        {txt}Largest       Std. Dev.     {res} 204.0166
+{txt}75%    {res}       69           1449
+{txt}90%    {res}      206           1491       {txt}Variance      {res} 41622.77
+{txt}95%    {res}      316           2550       {txt}Skewness      {res} 10.58138
+{txt}99%    {res}      776           4208       {txt}Kurtosis      {res}  176.748
+
+{com}. 
+. 
+. 
+. sum exptot,d
+
+          {txt}HH per capita total expenditure: Tk/year
+{hline 61}
+      Percentiles      Smallest
+ 1%    {res} 1737.211       1193.328
+{txt} 5%    {res} 2283.665       1392.159
+{txt}10%    {res} 2631.344       1494.248       {txt}Obs         {res}       1129
+{txt}25%    {res} 3253.756       1546.991       {txt}Sum of Wgt. {res}       1129
+
+{txt}50%    {res} 4432.264                      {txt}Mean          {res} 5473.268
+                        {txt}Largest       Std. Dev.     {res} 4140.221
+{txt}75%    {res} 6038.706        34470.7
+{txt}90%    {res} 9131.682       38635.81       {txt}Variance      {res} 1.71e+07
+{txt}95%    {res} 12032.48       47724.59       {txt}Skewness      {res} 4.381941
+{txt}99%    {res} 23430.95       47981.01       {txt}Kurtosis      {res} 32.79554
+
+{com}. 
+. hist exptot
+{txt}(bin={res}30{txt}, start={res}1193.3279{txt}, width={res}1559.5893{txt})
+{res}
+{com}. 
+. 
+. 
+. set more off
+
+. 
+. 
+. 
+. log using zach1
+{err}log file already open
+{txt}{search r(604):r(604);}
+
+{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}P:\665\zach1.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}25 Sep 2017, 11:24:51
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}

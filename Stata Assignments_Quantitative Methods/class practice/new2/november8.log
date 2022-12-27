@@ -1,0 +1,1561 @@
+--------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  F:\Econ 665\class practice\new2\november8.log
+  log type:  text
+ opened on:  10 Dec 2017, 01:03:29
+
+. clear
+
+. *  This is november8.log, picking up on what was done on Monday November 6
+. * // Let's redo the between effects model without altering the data structure
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. 
+. 
+. ///1111111111111111111111111111111111111111111111111111111111111
+> use BritishHouseholdPanel.dta
+
+. * Now, let's do the between regression.  First we will collapse the data set at the level of id,
+>  taking
+. * the average of the variables by id
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. quietly regress mental age woman couple separated divorced never_married
+
+. collapse (mean) mental age woman couple separated divorced never_married if e(sample), by(id)  /
+> / this alters the data structure
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * the data set is no longer panel.  It is a cross section.
+. * // between effects model
+. regress mental age woman couple separated divorced never_married 
+
+      Source |       SS           df       MS      Number of obs   =     7,584
+-------------+----------------------------------   F(6, 7577)      =     47.72
+       Model |  125.183024         6  20.8638373   Prob > F        =    0.0000
+    Residual |  3312.90297     7,577  .437231486   R-squared       =    0.0364
+-------------+----------------------------------   Adj R-squared   =    0.0356
+       Total |  3438.08599     7,583  .453393906   Root MSE        =    .66123
+
+-------------------------------------------------------------------------------
+       mental |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |    .002414   .0007231     3.34   0.001     .0009965    .0038315
+        woman |   .1949775    .015271    12.77   0.000     .1650422    .2249129
+       couple |   .0357703   .0225018     1.59   0.112    -.0083394      .07988
+    separated |   .7931771   .1325742     5.98   0.000     .5332951    1.053059
+     divorced |   .5139704   .0847859     6.06   0.000     .3477666    .6801743
+never_married |   .3309017   .0819682     4.04   0.000     .1702214    .4915821
+        _cons |  -.2518096   .0346075    -7.28   0.000    -.3196499   -.1839692
+-------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. 
+. 
+. ///2222222222222222222222222222222222222222222222222222222222222
+> clear
+
+. use BritishHouseholdPanel.dta
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. use BritishHouseholdPanel.dta
+
+. 
+. xtreg mental age woman couple separated divorced never_married, be 
+
+Between regression (regression on group means)  Number of obs     =     62,549
+Group variable: id                              Number of groups  =      7,584
+
+R-sq:                                           Obs per group:
+     within  = 0.0025                                         min =          1
+     between = 0.0364                                         avg =        8.2
+     overall = 0.0179                                         max =         15
+
+                                                F(6,7577)         =      47.72
+sd(u_i + avg(e_i.))=  .6612348                  Prob > F          =     0.0000
+
+-------------------------------------------------------------------------------
+       mental |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |    .002414   .0007231     3.34   0.001     .0009965    .0038315
+        woman |   .1949775    .015271    12.77   0.000     .1650422    .2249129
+       couple |   .0357703   .0225018     1.59   0.112    -.0083394      .07988
+    separated |   .7931772   .1325742     5.98   0.000     .5332951    1.053059
+     divorced |   .5139704   .0847859     6.06   0.000     .3477666    .6801743
+never_married |   .3309017   .0819682     4.04   0.000     .1702214    .4915821
+        _cons |  -.2518096   .0346075    -7.28   0.000    -.3196499   -.1839692
+-------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * note how the coefficients are under the be option compared to the regression done on the 
+. * collapsed (Averaged by id) data set
+. regress mental age woman couple separated divorced never_married 
+
+      Source |       SS           df       MS      Number of obs   =    62,549
+-------------+----------------------------------   F(6, 62542)     =    208.54
+       Model |  1067.66694         6  177.944491   Prob > F        =    0.0000
+    Residual |  53366.0332    62,542  .853283125   R-squared       =    0.0196
+-------------+----------------------------------   Adj R-squared   =    0.0195
+       Total |  54433.7002    62,548  .870270835   Root MSE        =    .92373
+
+-------------------------------------------------------------------------------
+       mental |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |   .0024708   .0003504     7.05   0.000      .001784    .0031576
+        woman |   .2023694   .0074189    27.28   0.000     .1878285    .2169104
+       couple |   .0075139   .0105725     0.71   0.477    -.0132083    .0282361
+    separated |   .5583078   .0312398    17.87   0.000     .4970777    .6195378
+     divorced |   .2241774   .0239372     9.37   0.000     .1772605    .2710943
+never_married |   .2236556   .0315205     7.10   0.000     .1618755    .2854358
+        _cons |  -.2346901     .01642   -14.29   0.000    -.2668732    -.202507
+-------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+.  
+. * Now let's abstract from the functional form xb and let's concentrate on the error term
+. xtset id
+       panel variable:  id (unbalanced)
+
+. xtsum mental age woman couple separated divorced never_married 
+
+Variable         |      Mean   Std. Dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+mental   overall | -.0111341    .932886  -1.974992   4.379388 |     N =   62551
+         between |             .6733345  -1.974992   3.670952 |     n =    7584
+         within  |             .6973295  -3.571402   5.117021 | T-bar = 8.24776
+                 |                                            |
+age      overall |  41.28089   11.30308         20         64 |     N =   63285
+         between |             11.93296         20         64 |     n =    7602
+         within  |             3.609779   31.90589   56.58089 | T-bar = 8.32478
+                 |                                            |
+woman    overall |  .5121277   .4998568          0          1 |     N =   63285
+         between |             .5000105          0          1 |     n =    7602
+         within  |                    0   .5121277   .5121277 | T-bar = 8.32478
+                 |                                            |
+couple   overall |  .1672961    .373243          0          1 |     N =   63283
+         between |             .3792531          0          1 |     n =    7602
+         within  |             .2054491  -.7660372   1.100629 | T-bar = 8.32452
+                 |                                            |
+separa~d overall |  .0142218   .1184052          0          1 |     N =   63283
+         between |             .0584497          0         .8 |     n =    7602
+         within  |             .1032965  -.7857782   .9475552 | T-bar = 8.32452
+                 |                                            |
+divorced overall |  .0245406   .1547213          0          1 |     N =   63283
+         between |             .0915751          0          1 |     n =    7602
+         within  |              .116867  -.8504594   .9578739 | T-bar = 8.32452
+                 |                                            |
+never_~d overall |   .014285   .1186642          0          1 |     N =   63283
+         between |             .0921334          0          1 |     n =    7602
+         within  |             .0850545  -.8746039   .9476184 | T-bar = 8.32452
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. // fixed effects model
+. xtreg mental age woman couple separated divorced never_married, fe 
+note: woman omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs     =     62,549
+Group variable: id                              Number of groups  =      7,584
+
+R-sq:                                           Obs per group:
+     within  = 0.0051                                         min =          1
+     between = 0.0014                                         avg =        8.2
+     overall = 0.0032                                         max =         15
+
+                                                F(5,54960)        =      56.33
+corr(u_i, Xb)  = -0.0459                        Prob > F          =     0.0000
+
+-------------------------------------------------------------------------------
+       mental |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |   .0045017   .0008475     5.31   0.000     .0028406    .0061628
+        woman |          0  (omitted)
+       couple |  -.0756434   .0159661    -4.74   0.000    -.1069371   -.0443497
+    separated |   .3951068   .0293305    13.47   0.000     .3376188    .4525947
+     divorced |  -.0378425   .0263161    -1.44   0.150    -.0894224    .0137373
+never_married |   .0160869   .0378081     0.43   0.670    -.0580171     .090191
+        _cons |  -.1891764    .035558    -5.32   0.000    -.2588704   -.1194825
+--------------+----------------------------------------------------------------
+      sigma_u |   .6746844
+      sigma_e |  .74201635
+          rho |  .45257982   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------
+F test that all u_i=0: F(7583, 54960) = 5.69                 Prob > F = 0.0000
+
+. rried, fe
+command rried is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. // time fixed effects
+. *xtset year
+. *xtreg menat age woman couple separated divorced never_married, fe
+. // random effects
+. xtset id
+       panel variable:  id (unbalanced)
+
+. xtreg mental age woman couple separated divorced never_married, re
+
+Random-effects GLS regression                   Number of obs     =     62,549
+Group variable: id                              Number of groups  =      7,584
+
+R-sq:                                           Obs per group:
+     within  = 0.0047                                         min =          1
+     between = 0.0284                                         avg =        8.2
+     overall = 0.0182                                         max =         15
+
+                                                Wald chi2(6)      =     501.47
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2       =     0.0000
+
+-------------------------------------------------------------------------------
+       mental |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |   .0024796   .0005302     4.68   0.000     .0014404    .0035187
+        woman |   .2013067   .0147352    13.66   0.000     .1724261    .2301872
+       couple |   -.033348   .0128953    -2.59   0.010    -.0586223   -.0080738
+    separated |   .4460436   .0283467    15.74   0.000     .3904851    .5016021
+     divorced |   .0435786   .0245713     1.77   0.076    -.0045802    .0917374
+never_married |   .1032232   .0334143     3.09   0.002     .0377323     .168714
+        _cons |  -.2229397   .0252407    -8.83   0.000    -.2724107   -.1734688
+--------------+----------------------------------------------------------------
+      sigma_u |  .55640445
+      sigma_e |  .74201635
+          rho |  .35991072   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------
+
+.  and efficient (the RE) and the other one, while consistent, is innefficient (FE)
+command and is unrecognized
+r(199);
+
+end of do-file
+
+r(199);
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * Which model is the correct one?
+. * LEt's run a haussman test to comapre the coefficients.  
+. * Under the null of no covariance between the x's and the individual effect
+. *, one estimate is consistent and efficient (the RE) and the other one, while consistent, is inn
+> efficient (FE)
+. * under the alternative, one estimate is inconsistent (RE) and the other one is consistent (FE).
+. 
+. * LEt's get the estimates:
+. quietly xtreg mental age woman couple separated divorced never_married, fe
+
+. estimates store fixed
+
+. quietly xtreg mental age woman couple separated divorced never_married, re
+
+. estimates store random
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. 
+. * // Hausman test for model efficiency
+. * under the null of no covariance, the difference between the two estimators of the coefficients
+. * of the X's should be about zero (i.e. (b-B) about zero for the included x's)
+. hausman fixed random 
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |     fixed        random       Difference          S.E.
+-------------+----------------------------------------------------------------
+         age |    .0045017     .0024796        .0020221        .0006612
+      couple |   -.0756434     -.033348       -.0422954        .0094143
+   separated |    .3951068     .4460436       -.0509368        .0075327
+    divorced |   -.0378425     .0435786       -.0814211         .009423
+never_marr~d |    .0160869     .1032232       -.0871362        .0176899
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                  chi2(5) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =       90.61
+                Prob>chi2 =      0.0000
+
+. xtreg mental age woman couple separated divorced never_married, fe robust cluster(id)
+note: woman omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs     =     62,549
+Group variable: id                              Number of groups  =      7,584
+
+R-sq:                                           Obs per group:
+     within  = 0.0051                                         min =          1
+     between = 0.0014                                         avg =        8.2
+     overall = 0.0032                                         max =         15
+
+                                                F(5,7583)         =      24.62
+corr(u_i, Xb)  = -0.0459                        Prob > F          =     0.0000
+
+                                  (Std. Err. adjusted for 7,584 clusters in id)
+-------------------------------------------------------------------------------
+              |               Robust
+       mental |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------+----------------------------------------------------------------
+          age |   .0045017   .0011033     4.08   0.000     .0023389    .0066644
+        woman |          0  (omitted)
+       couple |  -.0756434   .0185777    -4.07   0.000     -.112061   -.0392259
+    separated |   .3951068   .0494779     7.99   0.000     .2981165    .4920971
+     divorced |  -.0378425   .0433439    -0.87   0.383    -.1228087    .0471236
+never_married |   .0160869   .0494898     0.33   0.745    -.0809268    .1131006
+        _cons |  -.1891764   .0463181    -4.08   0.000    -.2799728     -.09838
+--------------+----------------------------------------------------------------
+      sigma_u |   .6746844
+      sigma_e |  .74201635
+          rho |  .45257982   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. 
+. 
+. ///333333333333333333333333333333333333333333333333333333333333333333333
+> * Let's try with another data set
+. use traffic.dta
+
+. des
+
+Contains data from traffic.dta
+  obs:           336                          
+ vars:            54                          30 Nov 2004 10:23
+ size:        61,152                          
+--------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------------------------
+state           float   %9.0g      sid        State ID (FIPS) Code
+year            int     %9.0g                 Year
+spircons        float   %9.0g                 Spirits Consumption
+unrate          float   %9.0g                 Unemployment Rate
+perinc          float   %9.0g                 Per Capita Personal Income
+emppop          float   %9.0g                 Employment/Population Ratio
+beertax         float   %9.0g                 Tax on Case of Beer
+sobapt          float   %9.0g                 % Southern Baptist
+mormon          float   %9.0g                 % Mormon
+mlda            float   %9.0g                 Minimum Legal Drinking Age
+dry             float   %9.0g                 % Residing in Dry Counties
+yngdrv          float   %9.0g                 % of Drivers Aged 15-24
+vmiles          float   %9.0g                 Ave. Mile per Driver
+breath          byte    %9.0g                 Prelim. Breath Test Law
+jaild           byte    %9.0g                 Mandatory Jail Sentence
+comserd         byte    %9.0g                 Mandatory Community Service
+allmort         int     %9.0g                 # of Vehicle Fatalities (#VF)
+mrall           float   %9.0g                 Vehicle Fatality Rate (VFR)
+allnite         int     %9.0g                 # of Night-time VF (#NVF)
+mralln          float   %9.0g                 Night-time VFR (NFVR)
+allsvn          int     %9.0g                 # of Single VF (#SVN)
+a1517           int     %9.0g                 #VF, 15-17 year olds
+mra1517         float   %9.0g                 VFR, 15-17 year olds
+a1517n          byte    %9.0g                 #NVF, 15-17 year olds
+mra1517n        float   %9.0g                 NVFR, 15-17 year olds
+a1820           int     %9.0g                 #VF, 18-20 year olds
+a1820n          int     %9.0g                 #NVF, 18-20 year olds
+mra1820         float   %9.0g                 VFR, 18-20 year olds
+mra1820n        float   %9.0g                 NVFR, 18-20 year olds
+a2124           int     %9.0g                 #VF, 21-24 year olds
+mra2124         float   %9.0g                 VFR, 21-24 year olds
+a2124n          int     %9.0g                 #NVF, 21-24 year olds
+mra2124n        float   %9.0g                 NVFR, 21-24 year olds
+aidall          float   %9.0g                 # of alcohol-involved VF
+mraidall        float   %9.0g                 Alcohol-Involved VFR
+pop             float   %9.0g                 Population
+pop1517         float   %9.0g                 Population, 15-17 year olds
+pop1820         float   %9.0g                 Population, 18-20 year olds
+pop2124         float   %9.0g                 Population, 21-24 year olds
+miles           float   %9.0g                 total vehicle miles (millions
+unus            float   %9.0g                 U.S. unemployment rate
+epopus          float   %9.0g                 U.S. Emp/Pop Ratio
+gspch           float   %9.0g                 GSP Rate of Change
+stabrv          str2    %9s                   
+region          str2    %9s                   
+reg             long    %8.0g      reg        
+fatal           float   %9.0g                 
+fatal1517       float   %9.0g                 
+fatal1820       float   %9.0g                 
+fatal2124       float   %9.0g                 
+fatal1517n      float   %9.0g                 
+fatal1820n      float   %9.0g                 
+fatal2124n      float   %9.0g                 
+perincK         float   %9.0g                 
+--------------------------------------------------------------------------------------------------
+Sorted by: 
+
+. sum state year fatal spircons unrate beertax perincK
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+       state |        336     30.1875    15.30985          1         56
+        year |        336        1985    2.002983       1982       1988
+       fatal |        336    2.040444    .5701938     .82121    4.21784
+    spircons |        336     1.75369    .6835745        .79        4.9
+      unrate |        336    7.346726    2.533405        2.4         18
+-------------+---------------------------------------------------------
+     beertax |        336     .513256    .4778442   .0433109   2.720764
+     perincK |        336    13.88018    2.253046   9.513762   22.19345
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * let's get basic summary stats using the xtsum command
+. xtsum state year fatal spircons unrate beertax perincK
+
+Variable         |      Mean   Std. Dev.       Min        Max |    Observations
+-----------------+--------------------------------------------+----------------
+state    overall |   30.1875   15.30985          1         56 |     N =     336
+         between |             15.44883          1         56 |     n =      48
+         within  |                    0    30.1875    30.1875 |     T =       7
+                 |                                            |
+year     overall |      1985   2.002983       1982       1988 |     N =     336
+         between |                    0       1985       1985 |     n =      48
+         within  |             2.002983       1982       1988 |     T =       7
+                 |                                            |
+fatal    overall |  2.040444   .5701938     .82121    4.21784 |     N =     336
+         between |             .5461407   1.110077   3.653197 |     n =      48
+         within  |             .1794253    1.45556   2.962664 |     T =       7
+                 |                                            |
+spircons overall |   1.75369   .6835745        .79        4.9 |     N =     336
+         between |             .6734649   .8614286   4.388572 |     n =      48
+         within  |              .147792   1.255119   2.265119 |     T =       7
+                 |                                            |
+unrate   overall |  7.346726   2.533405        2.4         18 |     N =     336
+         between |             1.953377        4.1       13.2 |     n =      48
+         within  |             1.634257   4.046726   12.14673 |     T =       7
+                 |                                            |
+beertax  overall |   .513256   .4778442   .0433109   2.720764 |     N =     336
+         between |             .4789513   .0481679   2.440507 |     n =      48
+         within  |             .0552203   .1415352   .7935126 |     T =       7
+                 |                                            |
+perincK  overall |  13.88018   2.253046   9.513762   22.19345 |     N =     336
+         between |             2.122712    9.95087   19.51582 |     n =      48
+         within  |             .8068546   11.43261   16.55782 |     T =       7
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * determinants of fatalities
+. xtreg fatal beertax spircons unrate perincK,fe
+
+Fixed-effects (within) regression               Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.3526                                         min =          7
+     between = 0.1146                                         avg =        7.0
+     overall = 0.0863                                         max =          7
+
+                                                F(4,284)          =      38.68
+corr(u_i, Xb)  = -0.8804                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |  -.4840728   .1625106    -2.98   0.003    -.8039508   -.1641948
+    spircons |   .8169652   .0792118    10.31   0.000     .6610484    .9728819
+      unrate |  -.0290499   .0090274    -3.22   0.001    -.0468191   -.0112808
+     perincK |   .1047103   .0205986     5.08   0.000      .064165    .1452555
+       _cons |   -.383783   .4201781    -0.91   0.362    -1.210841    .4432754
+-------------+----------------------------------------------------------------
+     sigma_u |  1.1181913
+     sigma_e |  .15678965
+         rho |  .98071823   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(47, 284) = 59.77                    Prob > F = 0.0000
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * LEt's include some time factors
+. tab year
+
+       Year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       1982 |         48       14.29       14.29
+       1983 |         48       14.29       28.57
+       1984 |         48       14.29       42.86
+       1985 |         48       14.29       57.14
+       1986 |         48       14.29       71.43
+       1987 |         48       14.29       85.71
+       1988 |         48       14.29      100.00
+------------+-----------------------------------
+      Total |        336      100.00
+
+. tab year, gen(yrdum)
+
+       Year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       1982 |         48       14.29       14.29
+       1983 |         48       14.29       28.57
+       1984 |         48       14.29       42.86
+       1985 |         48       14.29       57.14
+       1986 |         48       14.29       71.43
+       1987 |         48       14.29       85.71
+       1988 |         48       14.29      100.00
+------------+-----------------------------------
+      Total |        336      100.00
+
+. des yrdu*
+
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------------------------
+yrdum1          byte    %8.0g                 year== 1982.0000
+yrdum2          byte    %8.0g                 year== 1983.0000
+yrdum3          byte    %8.0g                 year== 1984.0000
+yrdum4          byte    %8.0g                 year== 1985.0000
+yrdum5          byte    %8.0g                 year== 1986.0000
+yrdum6          byte    %8.0g                 year== 1987.0000
+yrdum7          byte    %8.0g                 year== 1988.0000
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. xtreg fatal beertax spircons unrate perincK yrdum1-yrdum6,fe
+
+Fixed-effects (within) regression               Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.4528                                         min =          7
+     between = 0.1090                                         avg =        7.0
+     overall = 0.0770                                         max =          7
+
+                                                F(10,278)         =      23.00
+corr(u_i, Xb)  = -0.8728                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |  -.4347195   .1539564    -2.82   0.005    -.7377878   -.1316511
+    spircons |    .805857   .1126425     7.15   0.000     .5841163    1.027598
+      unrate |  -.0549084   .0103418    -5.31   0.000    -.0752666   -.0345502
+     perincK |   .0882636   .0199988     4.41   0.000     .0488953    .1276319
+      yrdum1 |    .134057   .0677696     1.98   0.049     .0006503    .2674638
+      yrdum2 |   .0806858   .0639253     1.26   0.208    -.0451535     .206525
+      yrdum3 |  -.0309258   .0503737    -0.61   0.540    -.1300882    .0682365
+      yrdum4 |  -.0656806   .0441832    -1.49   0.138    -.1526568    .0212956
+      yrdum5 |   .0832536   .0354834     2.35   0.020     .0134033     .153104
+      yrdum6 |   .0339842   .0314024     1.08   0.280    -.0278324    .0958009
+       _cons |  -.0050003   .4096507    -0.01   0.990    -.8114115     .801411
+-------------+----------------------------------------------------------------
+     sigma_u |  1.0987683
+     sigma_e |  .14570531
+         rho |  .98271904   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(47, 278) = 64.52                    Prob > F = 0.0000
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * looks like years are important as well
+. test yrdum2  yrdum3 yrdum4 yrdum5 yrdum6 yrdum1  
+
+ ( 1)  yrdum2 = 0
+ ( 2)  yrdum3 = 0
+ ( 3)  yrdum4 = 0
+ ( 4)  yrdum5 = 0
+ ( 5)  yrdum6 = 0
+ ( 6)  yrdum1 = 0
+
+       F(  6,   278) =    8.48
+            Prob > F =    0.0000
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * between, fixed and random effects models
+. xtreg fatal beertax spircons unrate perincK yrdum1-yrdum6,be
+note: yrdum1 omitted because of collinearity
+note: yrdum2 omitted because of collinearity
+note: yrdum3 omitted because of collinearity
+note: yrdum4 omitted because of collinearity
+note: yrdum5 omitted because of collinearity
+note: yrdum6 omitted because of collinearity
+
+Between regression (regression on group means)  Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.0479                                         min =          7
+     between = 0.4565                                         avg =        7.0
+     overall = 0.2583                                         max =          7
+
+                                                F(4,43)           =       9.03
+sd(u_i + avg(e_i.))=  .4209489                  Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |   .0740362   .1456333     0.51   0.614    -.2196614    .3677338
+    spircons |   .2997517   .1128135     2.66   0.011     .0722417    .5272618
+      unrate |   .0322333    .038005     0.85   0.401    -.0444111    .1088776
+     perincK |  -.1841747   .0422241    -4.36   0.000    -.2693277   -.0990218
+      yrdum1 |          0  (omitted)
+      yrdum2 |          0  (omitted)
+      yrdum3 |          0  (omitted)
+      yrdum4 |          0  (omitted)
+      yrdum5 |          0  (omitted)
+      yrdum6 |          0  (omitted)
+       _cons |   3.796343   .7502025     5.06   0.000     2.283415    5.309271
+------------------------------------------------------------------------------
+
+. xtreg fatal beertax spircons unrate perincK yrdum1-yrdum6,re
+
+Random-effects GLS regression                   Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.3482                                         min =          7
+     between = 0.0376                                         avg =        7.0
+     overall = 0.0129                                         max =          7
+
+                                                Wald chi2(10)     =     101.39
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |   .0267497   .1177637     0.23   0.820     -.204063    .2575624
+    spircons |   .2441989   .0853367     2.86   0.004      .076942    .4114559
+      unrate |  -.0785772   .0112242    -7.00   0.000    -.1005762   -.0565783
+     perincK |  -.0075135   .0203299    -0.37   0.712    -.0473594    .0323324
+      yrdum1 |   .2173046   .0682934     3.18   0.001      .083452    .3511572
+      yrdum2 |   .1481809   .0653161     2.27   0.023     .0201636    .2761982
+      yrdum3 |    .011323   .0516169     0.22   0.826    -.0898442    .1124902
+      yrdum4 |  -.0292782   .0465421    -0.63   0.529    -.1204991    .0619427
+      yrdum5 |    .083859   .0399907     2.10   0.036     .0054786    .1622393
+      yrdum6 |     .03725   .0363278     1.03   0.305    -.0339512    .1084511
+       _cons |   2.213091   .3737909     5.92   0.000     1.480474    2.945707
+-------------+----------------------------------------------------------------
+     sigma_u |  .41733092
+     sigma_e |  .14570531
+         rho |  .89134817   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. xtreg fatal beertax spircons unrate perincK ,re
+
+Random-effects GLS regression                   Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.2263                                         min =          7
+     between = 0.0123                                         avg =        7.0
+     overall = 0.0042                                         max =          7
+
+                                                Wald chi2(4)      =      49.90
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |   .0442768   .1204613     0.37   0.713     -.191823    .2803765
+    spircons |   .3024711   .0642954     4.70   0.000     .1764546    .4284877
+      unrate |  -.0491381   .0098197    -5.00   0.000    -.0683843   -.0298919
+     perincK |  -.0110727   .0194746    -0.57   0.570    -.0492423    .0270968
+       _cons |   2.001973   .3811247     5.25   0.000     1.254983    2.748964
+-------------+----------------------------------------------------------------
+     sigma_u |  .41675665
+     sigma_e |  .15678965
+         rho |  .87601197   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * Fixed or random?  LEt's do a hausman test
+. quietly xtreg fatal beertax spircons unrate perincK ,fe
+
+. estimates store fix
+
+. quietly xtreg fatal beertax spircons unrate perincK ,re
+
+. estimates store ran
+
+. hausman fix ran
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |      fix          ran         Difference          S.E.
+-------------+----------------------------------------------------------------
+     beertax |   -.4840728     .0442768       -.5283495        .1090815
+    spircons |    .8169652     .3024711         .514494        .0462668
+      unrate |   -.0290499    -.0491381        .0200882               .
+     perincK |    .1047103    -.0110727         .115783        .0067112
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                  chi2(4) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =      130.93
+                Prob>chi2 =      0.0000
+                (V_b-V_B is not positive definite)
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. xtreg fatal beertax spircons unrate perincK yrdum1-yrdum6,fe
+
+Fixed-effects (within) regression               Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.4528                                         min =          7
+     between = 0.1090                                         avg =        7.0
+     overall = 0.0770                                         max =          7
+
+                                                F(10,278)         =      23.00
+corr(u_i, Xb)  = -0.8728                        Prob > F          =     0.0000
+
+------------------------------------------------------------------------------
+       fatal |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |  -.4347195   .1539564    -2.82   0.005    -.7377878   -.1316511
+    spircons |    .805857   .1126425     7.15   0.000     .5841163    1.027598
+      unrate |  -.0549084   .0103418    -5.31   0.000    -.0752666   -.0345502
+     perincK |   .0882636   .0199988     4.41   0.000     .0488953    .1276319
+      yrdum1 |    .134057   .0677696     1.98   0.049     .0006503    .2674638
+      yrdum2 |   .0806858   .0639253     1.26   0.208    -.0451535     .206525
+      yrdum3 |  -.0309258   .0503737    -0.61   0.540    -.1300882    .0682365
+      yrdum4 |  -.0656806   .0441832    -1.49   0.138    -.1526568    .0212956
+      yrdum5 |   .0832536   .0354834     2.35   0.020     .0134033     .153104
+      yrdum6 |   .0339842   .0314024     1.08   0.280    -.0278324    .0958009
+       _cons |  -.0050003   .4096507    -0.01   0.990    -.8114115     .801411
+-------------+----------------------------------------------------------------
+     sigma_u |  1.0987683
+     sigma_e |  .14570531
+         rho |  .98271904   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(47, 278) = 64.52                    Prob > F = 0.0000
+
+. xtreg fatal beertax spircons unrate perincK yrdum1-yrdum6,fe robust 
+
+Fixed-effects (within) regression               Number of obs     =        336
+Group variable: state                           Number of groups  =         48
+
+R-sq:                                           Obs per group:
+     within  = 0.4528                                         min =          7
+     between = 0.1090                                         avg =        7.0
+     overall = 0.0770                                         max =          7
+
+                                                F(10,47)          =      14.13
+corr(u_i, Xb)  = -0.8728                        Prob > F          =     0.0000
+
+                                 (Std. Err. adjusted for 48 clusters in state)
+------------------------------------------------------------------------------
+             |               Robust
+       fatal |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     beertax |  -.4347195   .2442775    -1.78   0.082    -.9261425    .0567036
+    spircons |    .805857   .1161087     6.94   0.000     .5722764    1.039438
+      unrate |  -.0549084    .011763    -4.67   0.000    -.0785725   -.0312443
+     perincK |   .0882636   .0322971     2.73   0.009     .0232901     .153237
+      yrdum1 |    .134057   .0863572     1.55   0.127    -.0396714    .3077854
+      yrdum2 |   .0806858   .0796404     1.01   0.316      -.07953    .2409016
+      yrdum3 |  -.0309258   .0588603    -0.53   0.602    -.1493374    .0874857
+      yrdum4 |  -.0656806   .0489051    -1.34   0.186     -.164065    .0327038
+      yrdum5 |   .0832536    .035555     2.34   0.023     .0117261    .1547812
+      yrdum6 |   .0339842   .0318061     1.07   0.291    -.0300013    .0979698
+       _cons |  -.0050003   .6218603    -0.01   0.994    -1.256022    1.246021
+-------------+----------------------------------------------------------------
+     sigma_u |  1.0987683
+     sigma_e |  .14570531
+         rho |  .98271904   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. 
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. //44444444444444444444444444444444444444444444444444444444444444444444
+. clear
+
+. use TimeSeriesCrossSection.dta
+
+. des
+
+Contains data from TimeSeriesCrossSection.dta
+  obs:         5,198                          
+ vars:            11                          14 Sep 2015 12:45
+ size:       473,018                          (_dta has notes)
+--------------------------------------------------------------------------------------------------
+              storage   display    value
+variable name   type    format     label      variable label
+--------------------------------------------------------------------------------------------------
+id              float   %9.0g                 
+ccode           str3    %9s                   Country Code
+countryname     str46   %46s                  Country Name
+year            double  %8.0g                 
+cow             double  %8.0g               * Gleditsch/Ward Country Number
+ethfrac         float   %9.0g                 Ethnic fractionalization
+incidence       byte    %8.0g                 incidencev412
+onset2          byte    %8.0g                 onset2v412
+GDPperCapita    float   %8.0g                 
+GDPGrowth       float   %8.0g               * (annual %)
+FDI             double  %8.0g                 
+                                            * indicated variables have notes
+--------------------------------------------------------------------------------------------------
+Sorted by: cow  year
+
+. xtdes
+
+     cow:  2, 20, ..., 990                                   n =        194
+    year:  1985, 1986, ..., 2011                             T =         27
+           Delta(year) = 1 unit
+           Span(year)  = 27 periods
+           (cow*year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                         6      27      27        27        27      27      27
+
+     Freq.  Percent    Cum. |  Pattern
+ ---------------------------+-----------------------------
+      192     98.97   98.97 |  111111111111111111111111111
+        1      0.52   99.48 |  111111.....................
+        1      0.52  100.00 |  11111111...................
+ ---------------------------+-----------------------------
+      194    100.00         |  XXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+. tsset cow year
+       panel variable:  cow (unbalanced)
+        time variable:  year, 1985 to 2011
+                delta:  1 unit
+
+. tab cow
+
+Gleditsch/W |
+ard Country |
+     Number |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |         27        0.52        0.52
+         20 |         27        0.52        1.04
+         31 |         27        0.52        1.56
+         40 |         27        0.52        2.08
+         41 |         27        0.52        2.60
+         42 |         27        0.52        3.12
+         51 |         27        0.52        3.64
+         52 |         27        0.52        4.16
+         53 |         27        0.52        4.67
+         54 |         27        0.52        5.19
+         55 |         27        0.52        5.71
+         56 |         27        0.52        6.23
+         57 |         27        0.52        6.75
+         58 |         27        0.52        7.27
+         60 |         27        0.52        7.79
+         70 |         27        0.52        8.31
+         80 |         27        0.52        8.83
+         90 |         27        0.52        9.35
+         91 |         27        0.52        9.87
+         92 |         27        0.52       10.39
+         93 |         27        0.52       10.91
+         94 |         27        0.52       11.43
+         95 |         27        0.52       11.95
+        100 |         27        0.52       12.47
+        101 |         27        0.52       12.99
+        110 |         27        0.52       13.51
+        115 |         27        0.52       14.02
+        130 |         27        0.52       14.54
+        135 |         27        0.52       15.06
+        140 |         27        0.52       15.58
+        145 |         27        0.52       16.10
+        150 |         27        0.52       16.62
+        155 |         27        0.52       17.14
+        160 |         27        0.52       17.66
+        165 |         27        0.52       18.18
+        200 |         27        0.52       18.70
+        205 |         27        0.52       19.22
+        210 |         27        0.52       19.74
+        211 |         27        0.52       20.26
+        212 |         27        0.52       20.78
+        220 |         27        0.52       21.30
+        221 |         27        0.52       21.82
+        223 |         27        0.52       22.34
+        225 |         27        0.52       22.85
+        230 |         27        0.52       23.37
+        232 |         27        0.52       23.89
+        235 |         27        0.52       24.41
+        255 |         27        0.52       24.93
+        290 |         27        0.52       25.45
+        305 |         27        0.52       25.97
+        310 |         27        0.52       26.49
+        315 |          8        0.15       26.64
+        316 |         27        0.52       27.16
+        317 |         27        0.52       27.68
+        325 |         27        0.52       28.20
+        338 |         27        0.52       28.72
+        339 |         27        0.52       29.24
+        341 |         27        0.52       29.76
+        343 |         27        0.52       30.28
+        344 |         27        0.52       30.80
+        345 |         27        0.52       31.32
+        346 |         27        0.52       31.84
+        347 |         27        0.52       32.36
+        349 |         27        0.52       32.88
+        350 |         27        0.52       33.40
+        352 |         27        0.52       33.92
+        355 |         27        0.52       34.44
+        359 |         27        0.52       34.96
+        360 |         27        0.52       35.48
+        365 |         27        0.52       35.99
+        366 |         27        0.52       36.51
+        367 |         27        0.52       37.03
+        368 |         27        0.52       37.55
+        369 |         27        0.52       38.07
+        370 |         27        0.52       38.59
+        371 |         27        0.52       39.11
+        372 |         27        0.52       39.63
+        373 |         27        0.52       40.15
+        375 |         27        0.52       40.67
+        380 |         27        0.52       41.19
+        385 |         27        0.52       41.71
+        390 |         27        0.52       42.23
+        395 |         27        0.52       42.75
+        402 |         27        0.52       43.27
+        403 |         27        0.52       43.79
+        404 |         27        0.52       44.31
+        411 |         27        0.52       44.82
+        420 |         27        0.52       45.34
+        432 |         27        0.52       45.86
+        433 |         27        0.52       46.38
+        434 |         27        0.52       46.90
+        435 |         27        0.52       47.42
+        436 |         27        0.52       47.94
+        437 |         27        0.52       48.46
+        438 |         27        0.52       48.98
+        439 |         27        0.52       49.50
+        450 |         27        0.52       50.02
+        451 |         27        0.52       50.54
+        452 |         27        0.52       51.06
+        461 |         27        0.52       51.58
+        471 |         27        0.52       52.10
+        475 |         27        0.52       52.62
+        481 |         27        0.52       53.14
+        482 |         27        0.52       53.66
+        483 |         27        0.52       54.17
+        484 |         27        0.52       54.69
+        490 |         27        0.52       55.21
+        500 |         27        0.52       55.73
+        501 |         27        0.52       56.25
+        510 |         27        0.52       56.77
+        516 |         27        0.52       57.29
+        517 |         27        0.52       57.81
+        520 |         27        0.52       58.33
+        522 |         27        0.52       58.85
+        530 |         27        0.52       59.37
+        531 |         27        0.52       59.89
+        540 |         27        0.52       60.41
+        541 |         27        0.52       60.93
+        551 |         27        0.52       61.45
+        552 |         27        0.52       61.97
+        553 |         27        0.52       62.49
+        560 |         27        0.52       63.01
+        565 |         27        0.52       63.52
+        570 |         27        0.52       64.04
+        571 |         27        0.52       64.56
+        572 |         27        0.52       65.08
+        580 |         27        0.52       65.60
+        581 |         27        0.52       66.12
+        590 |         27        0.52       66.64
+        591 |         27        0.52       67.16
+        600 |         27        0.52       67.68
+        615 |         27        0.52       68.20
+        616 |         27        0.52       68.72
+        620 |         27        0.52       69.24
+        625 |         27        0.52       69.76
+        626 |         27        0.52       70.28
+        630 |         27        0.52       70.80
+        640 |         27        0.52       71.32
+        645 |         27        0.52       71.84
+        651 |         27        0.52       72.35
+        652 |         27        0.52       72.87
+        660 |         27        0.52       73.39
+        663 |         27        0.52       73.91
+        666 |         27        0.52       74.43
+        670 |         27        0.52       74.95
+        678 |         27        0.52       75.47
+        680 |          6        0.12       75.59
+        690 |         27        0.52       76.11
+        692 |         27        0.52       76.63
+        694 |         27        0.52       77.15
+        696 |         27        0.52       77.66
+        698 |         27        0.52       78.18
+        700 |         27        0.52       78.70
+        701 |         27        0.52       79.22
+        702 |         27        0.52       79.74
+        703 |         27        0.52       80.26
+        704 |         27        0.52       80.78
+        705 |         27        0.52       81.30
+        710 |         27        0.52       81.82
+        712 |         27        0.52       82.34
+        731 |         27        0.52       82.86
+        732 |         27        0.52       83.38
+        740 |         27        0.52       83.90
+        750 |         27        0.52       84.42
+        760 |         27        0.52       84.94
+        770 |         27        0.52       85.46
+        771 |         27        0.52       85.98
+        775 |         27        0.52       86.49
+        780 |         27        0.52       87.01
+        781 |         27        0.52       87.53
+        790 |         27        0.52       88.05
+        800 |         27        0.52       88.57
+        811 |         27        0.52       89.09
+        812 |         27        0.52       89.61
+        816 |         27        0.52       90.13
+        820 |         27        0.52       90.65
+        830 |         27        0.52       91.17
+        835 |         27        0.52       91.69
+        840 |         27        0.52       92.21
+        850 |         27        0.52       92.73
+        860 |         27        0.52       93.25
+        900 |         27        0.52       93.77
+        910 |         27        0.52       94.29
+        920 |         27        0.52       94.81
+        935 |         27        0.52       95.33
+        940 |         27        0.52       95.84
+        946 |         27        0.52       96.36
+        947 |         27        0.52       96.88
+        950 |         27        0.52       97.40
+        955 |         27        0.52       97.92
+        983 |         27        0.52       98.44
+        986 |         27        0.52       98.96
+        987 |         27        0.52       99.48
+        990 |         27        0.52      100.00
+------------+-----------------------------------
+      Total |      5,198      100.00
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. tab cow
+
+Gleditsch/W |
+ard Country |
+     Number |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          2 |         27        0.52        0.52
+         20 |         27        0.52        1.04
+         31 |         27        0.52        1.56
+         40 |         27        0.52        2.08
+         41 |         27        0.52        2.60
+         42 |         27        0.52        3.12
+         51 |         27        0.52        3.64
+         52 |         27        0.52        4.16
+         53 |         27        0.52        4.67
+         54 |         27        0.52        5.19
+         55 |         27        0.52        5.71
+         56 |         27        0.52        6.23
+         57 |         27        0.52        6.75
+         58 |         27        0.52        7.27
+         60 |         27        0.52        7.79
+         70 |         27        0.52        8.31
+         80 |         27        0.52        8.83
+         90 |         27        0.52        9.35
+         91 |         27        0.52        9.87
+         92 |         27        0.52       10.39
+         93 |         27        0.52       10.91
+         94 |         27        0.52       11.43
+         95 |         27        0.52       11.95
+        100 |         27        0.52       12.47
+        101 |         27        0.52       12.99
+        110 |         27        0.52       13.51
+        115 |         27        0.52       14.02
+        130 |         27        0.52       14.54
+        135 |         27        0.52       15.06
+        140 |         27        0.52       15.58
+        145 |         27        0.52       16.10
+        150 |         27        0.52       16.62
+        155 |         27        0.52       17.14
+        160 |         27        0.52       17.66
+        165 |         27        0.52       18.18
+        200 |         27        0.52       18.70
+        205 |         27        0.52       19.22
+        210 |         27        0.52       19.74
+        211 |         27        0.52       20.26
+        212 |         27        0.52       20.78
+        220 |         27        0.52       21.30
+        221 |         27        0.52       21.82
+        223 |         27        0.52       22.34
+        225 |         27        0.52       22.85
+        230 |         27        0.52       23.37
+        232 |         27        0.52       23.89
+        235 |         27        0.52       24.41
+        255 |         27        0.52       24.93
+        290 |         27        0.52       25.45
+        305 |         27        0.52       25.97
+        310 |         27        0.52       26.49
+        315 |          8        0.15       26.64
+        316 |         27        0.52       27.16
+        317 |         27        0.52       27.68
+        325 |         27        0.52       28.20
+        338 |         27        0.52       28.72
+        339 |         27        0.52       29.24
+        341 |         27        0.52       29.76
+        343 |         27        0.52       30.28
+        344 |         27        0.52       30.80
+        345 |         27        0.52       31.32
+        346 |         27        0.52       31.84
+        347 |         27        0.52       32.36
+        349 |         27        0.52       32.88
+        350 |         27        0.52       33.40
+        352 |         27        0.52       33.92
+        355 |         27        0.52       34.44
+        359 |         27        0.52       34.96
+        360 |         27        0.52       35.48
+        365 |         27        0.52       35.99
+        366 |         27        0.52       36.51
+        367 |         27        0.52       37.03
+        368 |         27        0.52       37.55
+        369 |         27        0.52       38.07
+        370 |         27        0.52       38.59
+        371 |         27        0.52       39.11
+        372 |         27        0.52       39.63
+        373 |         27        0.52       40.15
+        375 |         27        0.52       40.67
+        380 |         27        0.52       41.19
+        385 |         27        0.52       41.71
+        390 |         27        0.52       42.23
+        395 |         27        0.52       42.75
+        402 |         27        0.52       43.27
+        403 |         27        0.52       43.79
+        404 |         27        0.52       44.31
+        411 |         27        0.52       44.82
+        420 |         27        0.52       45.34
+        432 |         27        0.52       45.86
+        433 |         27        0.52       46.38
+        434 |         27        0.52       46.90
+        435 |         27        0.52       47.42
+        436 |         27        0.52       47.94
+        437 |         27        0.52       48.46
+        438 |         27        0.52       48.98
+        439 |         27        0.52       49.50
+        450 |         27        0.52       50.02
+        451 |         27        0.52       50.54
+        452 |         27        0.52       51.06
+        461 |         27        0.52       51.58
+        471 |         27        0.52       52.10
+        475 |         27        0.52       52.62
+        481 |         27        0.52       53.14
+        482 |         27        0.52       53.66
+        483 |         27        0.52       54.17
+        484 |         27        0.52       54.69
+        490 |         27        0.52       55.21
+        500 |         27        0.52       55.73
+        501 |         27        0.52       56.25
+        510 |         27        0.52       56.77
+        516 |         27        0.52       57.29
+        517 |         27        0.52       57.81
+        520 |         27        0.52       58.33
+        522 |         27        0.52       58.85
+        530 |         27        0.52       59.37
+        531 |         27        0.52       59.89
+        540 |         27        0.52       60.41
+        541 |         27        0.52       60.93
+        551 |         27        0.52       61.45
+        552 |         27        0.52       61.97
+        553 |         27        0.52       62.49
+        560 |         27        0.52       63.01
+        565 |         27        0.52       63.52
+        570 |         27        0.52       64.04
+        571 |         27        0.52       64.56
+        572 |         27        0.52       65.08
+        580 |         27        0.52       65.60
+        581 |         27        0.52       66.12
+        590 |         27        0.52       66.64
+        591 |         27        0.52       67.16
+        600 |         27        0.52       67.68
+        615 |         27        0.52       68.20
+        616 |         27        0.52       68.72
+        620 |         27        0.52       69.24
+        625 |         27        0.52       69.76
+        626 |         27        0.52       70.28
+        630 |         27        0.52       70.80
+        640 |         27        0.52       71.32
+        645 |         27        0.52       71.84
+        651 |         27        0.52       72.35
+        652 |         27        0.52       72.87
+        660 |         27        0.52       73.39
+        663 |         27        0.52       73.91
+        666 |         27        0.52       74.43
+        670 |         27        0.52       74.95
+        678 |         27        0.52       75.47
+        680 |          6        0.12       75.59
+        690 |         27        0.52       76.11
+        692 |         27        0.52       76.63
+        694 |         27        0.52       77.15
+        696 |         27        0.52       77.66
+        698 |         27        0.52       78.18
+        700 |         27        0.52       78.70
+        701 |         27        0.52       79.22
+        702 |         27        0.52       79.74
+        703 |         27        0.52       80.26
+        704 |         27        0.52       80.78
+        705 |         27        0.52       81.30
+        710 |         27        0.52       81.82
+        712 |         27        0.52       82.34
+        731 |         27        0.52       82.86
+        732 |         27        0.52       83.38
+        740 |         27        0.52       83.90
+        750 |         27        0.52       84.42
+        760 |         27        0.52       84.94
+        770 |         27        0.52       85.46
+        771 |         27        0.52       85.98
+        775 |         27        0.52       86.49
+        780 |         27        0.52       87.01
+        781 |         27        0.52       87.53
+        790 |         27        0.52       88.05
+        800 |         27        0.52       88.57
+        811 |         27        0.52       89.09
+        812 |         27        0.52       89.61
+        816 |         27        0.52       90.13
+        820 |         27        0.52       90.65
+        830 |         27        0.52       91.17
+        835 |         27        0.52       91.69
+        840 |         27        0.52       92.21
+        850 |         27        0.52       92.73
+        860 |         27        0.52       93.25
+        900 |         27        0.52       93.77
+        910 |         27        0.52       94.29
+        920 |         27        0.52       94.81
+        935 |         27        0.52       95.33
+        940 |         27        0.52       95.84
+        946 |         27        0.52       96.36
+        947 |         27        0.52       96.88
+        950 |         27        0.52       97.40
+        955 |         27        0.52       97.92
+        983 |         27        0.52       98.44
+        986 |         27        0.52       98.96
+        987 |         27        0.52       99.48
+        990 |         27        0.52      100.00
+------------+-----------------------------------
+      Total |      5,198      100.00
+
+. 
+. * // reports duplicates
+. duplicates report cow year  
+
+Duplicates in terms of cow year
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |         5198             0
+--------------------------------------
+
+. duplicates list cow year
+
+Duplicates in terms of cow year
+
+(0 observations are duplicates)
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. sum FDI, detail
+
+                             FDI
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%    -4.82e+08      -8.47e+10
+ 5%     -7100000      -3.17e+10
+10%       470000      -2.53e+10       Obs               4,618
+25%     1.70e+07      -2.49e+10       Sum of Wgt.       4,618
+
+50%     1.54e+08                      Mean           4.19e+09
+                        Largest       Std. Dev.      1.93e+10
+75%     1.30e+09       2.94e+11
+90%     7.21e+09       3.21e+11       Variance       3.71e+20
+95%     1.95e+10       3.33e+11       Skewness       10.18312
+99%     6.83e+10       3.40e+11       Kurtosis       134.7067
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. *  // generating log transformed variable
+. gen lnFDI=ln(FDI) 
+(932 missing values generated)
+
+. sum lnFDI, detail
+
+                            lnFDI
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     11.77529       2.374347
+ 5%     14.16868        4.60517
+10%     15.44881        4.60517       Obs               4,266
+25%     17.26875       6.907755       Sum of Wgt.       4,266
+
+50%     19.17433                      Mean           19.13451
+                        Largest       Std. Dev.      2.917849
+75%     21.18511       26.40783
+90%     22.81647       26.49556       Variance       8.513841
+95%     23.75934       26.53061       Skewness      -.3715863
+99%     25.04065        26.5524       Kurtosis        3.56363
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. hist FDI, normal
+(bin=36, start=-8.466e+10, width=1.180e+10)
+
+. hist lnFDI, normal
+(bin=36, start=2.3743474, width=.67161264)
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. hist FDI, normal
+(bin=36, start=-8.466e+10, width=1.180e+10)
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. hist lnFDI, normal
+(bin=36, start=2.3743474, width=.67161264)
+
+. graph twoway line lnFDI year if cow<100
+
+. graph twoway line lnFDI year if cow>=100 & cow<200
+
+. graph twoway line lnFDI year if cow>=200 & cow<300
+
+. graph twoway line lnFDI year if cow>=300 & cow<400
+
+. graph twoway line lnFDI year if cow>=400 & cow<500
+
+. graph twoway line lnFDI year if cow>=500 & cow<600
+
+. graph twoway line lnFDI year if cow>=600 & cow
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * Looking at Stationary, using Dickey Fuller test   Right now, ding it for one country: Canada
+. * // Dickey-Fuller test
+. dfuller lnFDI if cow==20, lags(1)  
+
+Augmented Dickey-Fuller test for unit root         Number of obs   =        22
+
+                               ---------- Interpolated Dickey-Fuller ---------
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+------------------------------------------------------------------------------
+ Z(t)             -2.164            -3.750            -3.000            -2.630
+------------------------------------------------------------------------------
+MacKinnon approximate p-value for Z(t) = 0.2197
+
+. dfuller lnFDI if cow==20, lags(1) regress
+
+Augmented Dickey-Fuller test for unit root         Number of obs   =        22
+
+                               ---------- Interpolated Dickey-Fuller ---------
+                  Test         1% Critical       5% Critical      10% Critical
+               Statistic           Value             Value             Value
+------------------------------------------------------------------------------
+ Z(t)             -2.164            -3.750            -3.000            -2.630
+------------------------------------------------------------------------------
+MacKinnon approximate p-value for Z(t) = 0.2197
+
+------------------------------------------------------------------------------
+     D.lnFDI |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       lnFDI |
+         L1. |  -.2871086   .1326962    -2.16   0.043    -.5648449   -.0093723
+         LD. |   .1155448   .2134883     0.54   0.595    -.3312912    .5623809
+             |
+       _cons |   6.711207   3.098477     2.17   0.043     .2260208    13.19639
+------------------------------------------------------------------------------
+
+. corrgram lnFDI if cow==20, lags(10)
+(note: time series has 1 gap)
+
+                                          -1       0       1 -1       0       1
+ LAG       AC       PAC      Q     Prob>Q  [Autocorrelation]  [Partial Autocor]
+-------------------------------------------------------------------------------
+1        0.7022   0.7419    14.36  0.0002          |-----             |-----   
+2        0.4548  -0.1155   20.635  0.0000          |---               |        
+3        0.3243   0.0211   23.963  0.0000          |--                |        
+4        0.2710   0.4243   26.393  0.0000          |--                |---     
+5        0.2780   0.2844   29.072  0.0000          |--                |--      
+6        0.3383   0.2604   33.238  0.0000          |--                |--      
+7        0.2353  -0.4199   35.358  0.0000          |-              ---|        
+8        0.1422   0.0195   36.176  0.0000          |-                 |        
+9        0.0202        .   36.193  0.0000          |          
+10      -0.0002        .   36.193  0.0001          |          
+
+. ac lnFDI if cow==20, lags(10)
+(note: time series has 1 gap)
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * now pooling over all countries, running a regression  of determinants of lnFDI
+. * with lags of dependend variable and lags of GDPsper capita, GDP growth, ethnic fraction
+.  // regression 
+. regress lnFDI l.lnFDI l.GDPperCapita l.GDPGrowth ethfrac l.incidence, vce(cluster cow)
+
+Linear regression                               Number of obs     =      3,129
+                                                F(5, 150)         =    1964.10
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.8459
+                                                Root MSE          =     1.0527
+
+                                  (Std. Err. adjusted for 151 clusters in cow)
+------------------------------------------------------------------------------
+             |               Robust
+       lnFDI |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       lnFDI |
+         L1. |   .8697302   .0116164    74.87   0.000     .8467773    .8926831
+             |
+GDPperCapita |
+         L1. |   .0000124   2.57e-06     4.82   0.000     7.30e-06    .0000174
+             |
+   GDPGrowth |
+         L1. |     .01117   .0043547     2.57   0.011     .0025656    .0197744
+             |
+     ethfrac |  -.1037323   .0998098    -1.04   0.300    -.3009469    .0934823
+             |
+   incidence |
+         L1. |    -.01008   .0602551    -0.17   0.867    -.1291384    .1089784
+             |
+       _cons |   2.643636   .2261663    11.69   0.000     2.196753    3.090519
+------------------------------------------------------------------------------
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. * One could also us the xt command with the random effects and fixed effects
+. * and one can also attempt to deal with heteroskedasticity using the
+. * xtpcse command
+. help xtpcse
+
+. 
+end of do-file
+
+. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+
+. 
+. 
+. * looking at limited dependent variables
+. tab onset2
+
+ onset2v412 |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |      4,307       96.61       96.61
+          1 |        151        3.39      100.00
+------------+-----------------------------------
+      Total |      4,458      100.00
+
+. 
+end of do-file
+
+. exit, clear

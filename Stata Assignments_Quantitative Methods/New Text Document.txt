@@ -1,0 +1,6 @@
+data surveys_pub_01;
+set "C:/Users/Kun/Desktop/Econ 665/paper/New folder/surveys_pub_01.sas7bdat";
+proc export data=surveys_pub_01 outfile= "C:/Users/Kun/Desktop/Econ 665/paper/New folder/surveys_pub_01.dta";
+run;
+
+merge 1:1 idind wave using educ_00.dta

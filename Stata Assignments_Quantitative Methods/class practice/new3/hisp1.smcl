@@ -1,0 +1,169 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}F:\Econ 665\class practice\new3\hisp1.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Dec 2017, 12:31:58
+{txt}
+{com}. *Open the cleaned data set
+. use "evaluation.dta" 
+{txt}(Household Roster (households with completed interview))
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. 
+. global controls  age_hh age_sp educ_hh educ_sp female_hh indigenous hhsize dirtfloor bathroom land hospital_distance
+{txt}
+{com}. describe $controls
+
+              {txt}storage   display    value
+variable name   type    format     label      variable label
+{hline}
+{p 0 48}{res}{bind:age_hh         }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Age of the head of the household (in years){p_end}
+{p 0 48}{bind:age_sp         }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Age of the spouse (in years){p_end}
+{p 0 48}{bind:educ_hh        }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Education of the head of household (completed years of schooling){p_end}
+{p 0 48}{bind:educ_sp        }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Education of the spouse (completed years of schooling){p_end}
+{p 0 48}{bind:female_hh      }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Head of the household is a woman (0=no, 1=yes){p_end}
+{p 0 48}{bind:indigenous     }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Head of household speaks an indigenous language (0=no, 1=yes){p_end}
+{p 0 48}{bind:hhsize         }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Number of household members (baseline){p_end}
+{p 0 48}{bind:dirtfloor      }{txt}{bind: byte    }{bind:{txt}%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Home has a dirt floor at baseline (0=no, 1=yes){p_end}
+{p 0 48}{bind:bathroom       }{txt}{bind: byte    }{bind:{txt}%8.0g     }{space 1}{bind:         }{bind:  }{res}{res}Home with private bathroom at baseline (0=no, 1=yes){p_end}
+{p 0 48}{bind:land           }{txt}{bind: byte    }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}Number of hectares of land owned by household at baseline{p_end}
+{p 0 48}{bind:hospital_dist~e}{txt}{bind: double  }{bind:{txt}%11.0g    }{space 1}{bind:         }{bind:  }{res}{res}Distance to closest hospital{p_end}
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. 
+. * some information on important variables we will use
+. sum $controls
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 6}age_hh {c |}{res}     19,827    46.68312    15.29482         14         88
+{txt}{space 6}age_sp {c |}{res}     19,827    40.58173     12.8227         14         88
+{txt}{space 5}educ_hh {c |}{res}     19,827     2.83355    2.754713          0         16
+{txt}{space 5}educ_sp {c |}{res}     19,827    2.618601    2.543279          0         17
+{txt}{space 3}female_hh {c |}{res}     19,827    .0990568    .2987459          0          1
+{txt}{hline 13}{c +}{hline 57}
+{space 2}indigenous {c |}{res}     19,827    .3529026    .4778848          0          1
+{txt}{space 6}hhsize {c |}{res}     19,827    5.178645     2.19515          1         13
+{txt}{space 3}dirtfloor {c |}{res}     19,827    .6036213    .4891571          0          1
+{txt}{space 4}bathroom {c |}{res}     19,827    .6159782    .4863754          0          1
+{txt}{space 8}land {c |}{res}     19,827     2.07974    3.133202          0         23
+{txt}{hline 13}{c +}{hline 57}
+hospital_d~e {c |}{res}     19,827    105.3225    42.06348   9.465392   170.4576
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD01000000.tmp"
+{txt}
+{com}. tab eligible
+
+  {txt}Household {c |}
+eligible to {c |}
+  enroll in {c |}
+HISP (0=no, {c |}
+     1=yes) {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}      8,570       43.22       43.22
+{txt}          1 {c |}{res}     11,257       56.78      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     19,827      100.00
+{txt}
+{com}. tab eligible enrolled
+
+ {txt}Household {c |}
+  eligible {c |}
+ to enroll {c |}
+   in HISP {c |}  HH enrolled in HISP
+    (0=no, {c |}     (0=no, 1=yes)
+    1=yes) {c |}         0          1 {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}     8,570          0 {txt}{c |}{res}     8,570 
+{txt}         1 {c |}{res}     5,328      5,929 {txt}{c |}{res}    11,257 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}    13,898      5,929 {txt}{c |}{res}    19,827 
+
+{txt}
+{com}. tab round
+
+     {txt}Survey {c |}
+ round (0 = {c |}
+baseline; 1 {c |}
+          = {c |}
+ follow-up) {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}      9,913       50.00       50.00
+{txt}          1 {c |}{res}      9,914       50.00      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     19,827      100.00
+{txt}
+{com}. tab treatment_loca
+
+  {txt}Household {c |}
+ is located {c |}
+         in {c |}
+  treatment {c |}
+  community {c |}
+     (0=no, {c |}
+     1=yes) {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}      9,908       49.97       49.97
+{txt}          1 {c |}{res}      9,919       50.03      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     19,827      100.00
+{txt}
+{com}. tab enrolled
+
+{txt}HH enrolled {c |}
+    in HISP {c |}
+     (0=no, {c |}
+     1=yes) {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}     13,898       70.10       70.10
+{txt}          1 {c |}{res}      5,929       29.90      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     19,827      100.00
+{txt}
+{com}. tab enrolled treatment_loc
+
+        {txt}HH {c |} Household is located
+  enrolled {c |}     in treatment
+   in HISP {c |}   community (0=no,
+    (0=no, {c |}        1=yes)
+    1=yes) {c |}         0          1 {c |}     Total
+{hline 11}{c +}{hline 22}{c +}{hline 10}
+         0 {c |}{res}     9,908      3,990 {txt}{c |}{res}    13,898 
+{txt}         1 {c |}{res}         0      5,929 {txt}{c |}{res}     5,929 
+{txt}{hline 11}{c +}{hline 22}{c +}{hline 10}
+     Total {c |}{res}     9,908      9,919 {txt}{c |}{res}    19,827 
+
+{txt}
+{com}. * Another one
+. tab enrolled_rp
+
+  {txt}Household {c |}
+enrolled in {c |}
+ HISP under {c |}
+ the random {c |}
+  promotion {c |}
+   scenario {c |}
+     (0=no, {c |}
+     1=yes) {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+          0 {c |}{res}     14,012       70.67       70.67
+{txt}          1 {c |}{res}      5,815       29.33      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}     19,827      100.00
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. exit, clear

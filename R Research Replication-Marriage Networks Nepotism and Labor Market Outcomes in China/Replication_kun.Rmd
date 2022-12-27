@@ -1,0 +1,357 @@
+---
+title: "Replication---Marriage Networks Nepotism and Labor Market Outcomes in China"
+author: "Kun Yang"
+date: "November 27, 2015"
+output: 
+  html_document: 
+    highlight: tango
+    theme: cosmo
+---
+# 1. Introduction:
+
+This paper is trying to figure out the impact of the connection between a man and his father-in-law on the men's labor market outcomes in China. In other words, we want to know the effect of assistance from men's fathers-in-law on his labor market outcomes.
+
+This question is interesting because the connection with father-in-law through a marriage is one of the most important components in the nepotism. This mechanism, which is called "guanxi", is very important in the China, where the personal networks of influence and obligations have a significant implication on an individual's social position and income. Guanxi, literally means connections or relationships, originates from Confucianism, which emphases the importance of associating oneself with others in a hierarchical manner, in order to maintain both social and economic order. In particular, the foundations of guanxi stress on implicit mutual obligations, reciprocity, and trust.  (Definition from Wikipedia, https://en.wikipedia.org/wiki/Guanxi) 
+
+In addition, marriage is one of the most immediate, reliable way to build guanxi and expand social circle in China nowadays. (Once the marriage certificate issued, a new guanxi was built.) In a patriarchal society like Confucian China, a man, who can broaden his social networks through the connection with his father-in-law, may benefit economically in the long run. 
+
+Thus, the effect of assistance from men's father-in-law on the labor market outcomes is worthy of study. If the effect of assistance from men's fathers-in-law on men's outcomes really exists, it may become the source of nepotism and corruption. From social respective, this kind of nepotism may distort wages and decrease efficiency in the labor market. As the nepotism and corruption are more likely happen in a state-run company, then social reforms, such as regulatory system reforming and privatization, may be needed to reduce nepotism and corruption. 
+
+
+# 2. Data description:
+
+The website to download the author's modified dataset: https://www.aeaweb.org/articles.php?doi=10.1257/app.5.3.91
+
+# CHNS
+In order to estimate the impact of the connection between a man and his father-in-law on the man's labor market outcomes, we can use the panel data from the China Health and Nutrition Survey.
+
+The CHNS data includes nine provinces, which is Guangxi, Guizhou, Heilongjiang, Henan, Hubei, Hunan, Jiangsu, Liaoning, and Shandong. Those provinces are varying considerably in both geography and development levels in China. 
+
+The dataset includes the years of 1991, 1993, 1997, 2000, 2004, and 2006. The year of 1989 is excluded because the survey in that year did not ask the questions about men's parents-in-law. Additionally, the CHNS dataset contains 74 variables which including year, province, personal ID, age, hourly earnings, education level, parents-in-law distance, years married, health status, state sector job indicator,  reside with parents-in-law indicator, parents-in-law alive indicator, etc.
+
+Furthermore, the samples are limited to adult, married men in the labor force between the ages of 22 and 45. The lower-bound age is 22 because the legal age of marriage for men in China is 22. The upper-bound age is 45 because the father-in-law has already near the life expectancy and most likely has already dead. In addition, we will only focus on urban areas because most men in the rural area do farming and do not find the job in the labor market.
+
+Then I will replicate table 1 column 1 (summary statistics) for CHNS. The interpretation will be provided after the table of summary statistics.
+
+### summary statistics for chns dataset
+
+Load required library
+
+```{r, message=FALSE}
+require("foreign")
+require("memisc")
+```
+
+Read the dta data
+
+```{r}
+chns <- read.dta("chns.dta") #Dataset 1: China Health and Nutrition Survey
+slcc <- read.dta("slcc.dta") #Dataset 2: State and Life Chances
+```
+
+Keep only the needed observation.
+
+```{r}
+chns <- subset(chns, single!=1 & male==1 & urban_type==1 & age>=22 & age<=45 & year>1989 & !is.na(married) & !is.na(yrs_married) & !is.na(health_status)  & !is.na(stat_work) & !is.na(stat_school))
+slcc <- subset(slcc, year>=80 & age_male>=22 & age_male<=45 & div_male!=1 & !is.na(yrs_marr) & !is.na(age_male) & !is.na(incom_male) &  !is.na(emp_state_male)  & !is.na(live_mil_male) & !is.na(live_fil_male) )
+```
+
+
+Set a function to get the Summary Statistics for chns data set.
+
+```{r}
+calculate.fct <- function(x){
+  table1.var<- c("age","hsedu","hrindinc_real", "dist_dadinlawti","dist_mominlawti", "emp_state","samehouse_mominlaw","samehouse_dadinlaw","live_dadinlaw","live_mominlaw")
+  x <- x[table1.var] #keep the needed variables
+  Mean <- colMeans(x, na.rm=TRUE) #calculate the mean
+  SD <- sqrt(diag(var(x, na.rm=TRUE)))#calculate the standard deviation
+  Minima <- apply(x,2,min, na.rm=TRUE)#clculate the minima
+  Maxima <- apply(x,2,max, na.rm=TRUE)#calculate the maxima
+  result <- data.frame(Mean, SD, Minima, Maxima) #the dataframe for the final results
+  result  #return the result
+}
+```
+
+Apply the function on chns data
+
+```{r}
+chns.results <- calculate.fct(chns)
+```
+
+Calculate the number of observations
+
+```{r}
+Observations <-nrow(chns)
+```
+
+Print the table 1 for chns dataset
+
+```{r}
+table.chns <- round(chns.results,2) # round off to 3 decimal places
+table.chns[nrow(table.chns)+1, ] <- Observations #add the number of observations into table
+# rename the rows
+rownames(table.chns) <- c("Age", "High school education", "Real hourly earnings", "Father-in-law distance (km)", "Mother-in-law distance (km)", "State sector job", "Reside with father-in-law", "Reside with mother-in-law", "Father-in-law alive", "Mother-in-law alive", "Observations")
+table.chns
+```
+
+
+## Interpretation of the chns Summary Statistics
+
+
+My results are similar with the author's. There exist differences because I have a larger number of observations (3171) than the author's number of observations (2015). (I can't get the same number of observations.) We can see that, in the sample, the mean of age is 36, which is close to the middle of the age range (33.5), with a standard deviation of 5.42. The minimal age is 22 and maximal age is 45, which is exactly equal to what I have set for the sample range. 
+
+The mean of hourly earnings is 1.8 RMB with a standard deviation of 3.5.  The standard deviation is quite large compared to the mean, it indicates that the income gap is large in Chinese cities (the maxima is 3000 and the minima is 0). 
+
+Slightly over half of the men finished high school and work in sate-sector. 
+
+The average distance from parents-in-law is around 56 km with a very high standard deviation (over 200) because some men live with parents-in-law and some others live extremely far away (over 3000 km). Additionally, only around 4% of men reside with father-in-law and around 3% of men reside with mother-in-law. The portion of men reside with parents-in-law is very low. 
+
+Finally, 66% of men's father-in-law still alive and 81% of men's mother-in-law still alive in our CHNS sample.
+
+
+# SLCC
+
+Then author also used a transformed panel data from the State and Life Chances in Urban China. 
+
+The SLCC dataset contains 4,073 households from 6 provinces and Beijing, Shanghai. The respondents were asked about his full history of job transitions and characteristics at each job. The SLCC dataset contains the year from 1991 to 1994 and also from the years of 1984 to 1987. Additionally, the CHNS dataset contains the 35 variables which including year, province, personal ID, age, monthly earnings, education level, state sector job indicator, parents-in-law alive indicator, etc. The samples are limited to the same criteria as I set for CHNS dataset. The ages range are from 22 to 45. Only urban areas are included.
+
+Then I will replicate table 1 column 1 (summary statistics) for SLCC. The interpretation will be provided after the table of summary statistics.
+
+### summary statistics for SLCC dataset
+
+Set a function to get the Summary Statistics for slcc data set
+
+```{r}
+calculate.fct2 <- function(x){
+  table1.var<- c("age_male","hsedu_male", "incom_male","emp_state_male", "live_fil_male","live_mil_male")
+  x <- x[table1.var] #keep the needed variables
+  Mean <- colMeans(x, na.rm=TRUE) #calculate the mean
+  SD <- sqrt(diag(var(x, na.rm=TRUE)))#calculate the standard deviation
+  Minima <- apply(x,2,min, na.rm=TRUE)#clculate the minima
+  Maxima <- apply(x,2,max, na.rm=TRUE)#calculate the maxima
+  result <- data.frame(Mean, SD, Minima, Maxima) #the dataframe for the final results
+  result  #return the result
+}
+```
+
+Apply the function on slcc data
+```{r}
+slcc.results <- calculate.fct2(slcc)
+```
+
+Calculate the number of observations
+```{r}
+Observations <-nrow(slcc)
+```
+
+Print the table 1 for slcc dataset
+```{r}
+table.slcc <- round(slcc.results,2) # round off to 3 decimal places
+table.slcc[nrow(table.slcc)+1, ] <- Observations #add the number of observations into table
+# rename the rows
+rownames(table.slcc) <- c("Age", "High school education", "Real monthly earnings", "State sector job", "Father-in-law alive", "Mother-in-law alive", "Observations")
+table.slcc
+```
+
+## Interpretation of the slcc Summary Statistics
+
+My results are similar with the author's in most part. 
+
+There are some differences because I have a larger number of observations (10100) than the author's (9263). We can see that, in the sample, the mean of age is 34, which is quite at the middle of the age range (33.5), with a standard deviation of 6.3. The minimal age is 22 and maxima age is 45, which is exactly equal to what I have set for the sample range. 
+
+The average monthly earnings are 392.18 RMB with a standard deviation of 2226.41. Like the results from CHNS data, the standard deviation is quite large compared to the mean, it indicates that the income gap is large in Chinese cities (maxima is 197984 and minima is 0). I noticed that the author's standard deviation for monthly earnings is only 638.5, that is because the author excludes some extremely large monthly incomes from the samples. 
+
+Compared to the result from CHNS dataset, there is higher percentage of men work in the state sector (0.8) because our samples from the SLCC data are gathered back from the year of 1984.  Chinese private economy developed a lot in recent years. 
+
+Finally, 70% of men's father-in-law still alive and 81% of men's mother-in-law still alive in our SLCC sample.
+
+In this replication, I will only use the CHNS data.
+
+
+
+# 3. Models and results:
+
+In order to estimate the effect of the expansion of an individual's networks through the connection with his father-in-law on the men's labor market outcomes, we need to find an exogenous variable that only capture the effect of the social network expanding through father-in-law.
+
+We can assume that the death of father-in-law is unpredictable and exogenous, then we can estimate the effect of the connection between son-in-law and father-in-law on the son-in-law's labor market outcomes by comparing the labor market outcomes of the same individual before and after the post-marriage death of his father-in-law. 
+
+The fixed-effect model was used because the unobserved individual characteristics may correlate with the formation of marriage match. And the unobserved individual characteristics also affect the labor market earnings.
+
+For example, it may be the case that lower ability men tend to find a spouse through the introduction of relatives (he have no ability to find a spouse by himself). And the low ability men also tend to have lower outcomes. Thus, there will be an endogenous problem (omitted variable bias) and the estimated coefficient will be underestimated. 
+
+In the fixed-effect model, we can control the time-invariant unobservable individual characteristics, such as ability, personality, etc. Then, all of the individual time-invariant unobserved characteristics effects on labor market will be captured by $\gamma_i$.
+
+We can set the regression model as follows:
+
+$y_{it} = \alpha_0 + \alpha PostFIL_{it} + \beta X_{it} + \gamma_i + \epsilon_{it}$
+
+$y_{it}$ = the logarithm of earnings for individual i in year t.
+
+$PostFIL_{it}$ = one for each wave following the death of the father-in-law for individual i in year t.
+
+$\gamma_i$ = time-invariant individual fixed effects (ability, personality, etc.)
+
+$X_{it}$ is the controlled variables includes indicators for individual i in year t for categories of education, a cubic in age, constant term, etc. 
+
+
+Under this fixed effect model, we can assume that the death of father-in-law will be exogenous and unpredictable, that is mean $PostFIL_{it}$ are not correlated with $\epsilon_{it}$ after the time-invariant individual fixed effects and some additional variables are controlled. 
+
+More importantly, the coefficient $\alpha$ (Fixed-effect estimator) captures the within-person effect of the death of a father-in-law on men's earnings. And because of the death of father-in-law is unpredictable, we can interpret estimated coefficient of the death of father-in-law as the effect of the social network expansion through father-in-law on the men's labor market outcomes. (In fact, we still need a falsification test, which I will show and explain in the part of table 4 later.)
+
+
+### Replicate Table 2
+
+Then, I will replicate the table 2 for CHNS data, which use the fixed effect estimator. 
+
+In table 2, the dependent variables are constructed with log real hourly earnings. All regressions include a cubic in age, education, province-year indicators, individual fixed effects, and a constant term. In column 2, the additional controls of years married and health status are included. 
+
+**Column 1 by chns**
+
+I will use the least squares dummy variables estimation. The values of the estimated coefficients will be identical to the value of the estimated coefficients from fixed effect estimation. 
+
+```{r}
+Table2.chns1 <- lm(loghrindinc_real ~ post_FILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+factor(id), data=chns) 
+```
+
+**Column 2 by chns**
+
+```{r}
+Table2.chns2 <- lm(loghrindinc_real ~ post_FILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+yrs_married+health_status+factor(id), data=chns) 
+```
+
+**Make a table to show the result**
+
+```{r}
+table2 <- mtable("(1) No additional controls"=Table2.chns1, "(2) With additional controls"=Table2.chns2, summary.stats=c("N","adj. R-squared"))
+table2$coefficients <- table2$coefficients[,,2,,drop=FALSE]
+table2
+```
+
+## Interpretation of table 2:
+
+For column 1 without additional controls, the death of father-in-law decreases men's hourly earnings by 10 percentage, ceteris paribus. It is statistically insignificant based on my result, but statistically significant based on the author's result.
+
+By controlling the years married and health status, the magnitude of the impact on wages remains similar. We can say that with controls of years married and health status, the death of father-in-law decrease men's hourly earnings by 10.4 percentage, ceteris paribus. 
+
+Overall, these results indicate that the labor market outcomes of young men decline following the loss of the fathers-in-law.
+
+
+### Replicate Table 4
+
+While table 2 shows a decrease in the men's earnings following the death of their fathers-in-law, there may be other explanations rather than the connection between the son-in-law and father-in-law for the decrease in earnings. 
+
+There are other changes occurring around the time of the death of father-in-law that are unrelated to the connection between men and their father-in-law. That is to say, the earnings decrease is not due to the loss of father-in-law, instead due to other things which may happen at the same time of the death of father-in-law. For example, funeral expenditures and changes in household time allocation regarding caring for sick parents are correlated with the death of father-in-law and also decrease the men's earnings.
+
+Thus, a falsification test was needed. The author uses the death of the mother-in-law instead of father-in-law in the regression.
+
+There are 2 assumptions.
+
+First, we assume that the time-varying unobservable changes which correlated with a parent-in-law's death are similar for both mothers-in-law and fathers-in-law. Thus, mothers-in-law and fathers-in-law have the same time trend around the death of a parent-in-law.
+
+Second, we assume that there exist a high degree of gender segregation in jobs, and men are more likely to gain assistance from father-in-law rather than from mother-in-law.
+
+Thus, if the decrease in earnings is not due to the loss of the connection with father-in-law, we will find similar decrease in earnings after the death of mother-in-law. 
+
+
+**Panel A column 1**
+```{r}
+Table4.chns1 <- lm(loghrindinc_real ~ post_MILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+factor(id), data=chns) 
+```
+
+**Panel A column 2**
+```{r}
+Table4.chns2 <- lm(loghrindinc_real ~ post_MILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+yrs_married+health_status+factor(id), data=chns) 
+```
+
+**Panel B column 1**
+```{r}
+Table4.chns3 <- lm(loghrindinc_real ~ post_MILdie+post_FILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+factor(id), data=chns) 
+```
+
+**Panel B column 2**
+```{r}
+Table4.chns4 <- lm(loghrindinc_real ~ post_MILdie+post_FILdie+age+age2+age3+factor(year)*factor(province)+factor(edulevel)+div+head+spouse+yrs_married+health_status+factor(id), data=chns) 
+```
+
+
+**Make a table to show the result**
+
+**Table 4 panel A**
+```{r}
+table4.A <- mtable("(1) No additional controls"=Table4.chns1, "(2) With additional controls"=Table4.chns2, summary.stats=c("N","adj. R-squared"))
+table4.A$coefficients <- table4.A$coefficients[,,2,,drop=FALSE]
+table4.A
+```
+
+## Interpretation of table 4 panel A:
+
+In table 4 Panel A, I substitute the death of mother-in-law for the father-in-law in regression. 
+
+It seems that the mother-in-law's death leads to an increase in men's earnings, unlike the estimates for the death of the father-in-law which leads to a decrease in earnings. However, both of the author's and my results show that the estimated coefficients are insignificant for the mother-in-law's death. 
+
+We have no evidence to say that the death of mother-in-law has any effect on earnings, based on the results of table 4 panel A. 
+There is no decrease in earnings after the death of mother-in-law, unlike what we found when we use father-in-law in regression.
+
+**Table 4 panel B**
+
+```{r, message=FALSE}
+table4.B <- mtable("(1) No additional controls"=Table4.chns3, "(2) With additional controls"=Table4.chns4, summary.stats=c("N","adj. R-squared"))
+table4.B$coefficients <- table4.B$coefficients[,,2:3,,drop=FALSE]
+table4.B
+```
+
+## Interpretation of table 4 panel B:
+
+The table 4 Panel B includes both the death of father-in-law and mother-in-law. Based on the standard error that the author provided, the estimated coefficients are positive but insignificant for the death of mother-in-law. And, with the control of the death of mother-in-law, the impact of the father-in-law's death on men's earnings is still negative and significant (based on the author's SE). The estimated coefficients for the death of father-in-law are larger than what we found in table 2. It suggests that the death of mother-in-law (positive coefficients) may cause the effect of losing father-in-law underestimated, if we do no control it.
+
+For table 4 panel B column 1, the death of father-in-law decrease men's hourly earnings by 12.2 percentage, holding the death of mother-in-law constant, ceteris paribus.  
+
+For table 4 panel B column 2, with additional controls of years married and health status, the death of father-in-law decrease men's hourly earnings by 12.5 percentage, holding the death of mother-in-law constant, ceteris paribus. 
+
+Overall, this results indicate that the labor market outcomes of men decline following the loss of the fathers-in-law. 
+
+Moreover, the falsification test shows that the changes that may occur around the time of the death of parents-in-law will not change the effect of the death of father-in-law on men's earnings. 
+
+Thus, the effect of the death of father-in-law can be interpreted as the effect of the loss of the social network through father-in-law on a men's earning.
+
+
+
+
+# 4. Conclusion:
+
+In order to estimate the effect of the expansion of an individual's networks through father-in-law on his labor market outcomes, I compare the labor market outcomes of the same individual before and after the post-marriage death of his father-in-law.
+
+The fixed-effect model was used to control the time-invariant unobservable individual characteristics, which may correlate with the formation of marriage match and have an effect on the labour market outcomes.
+
+By running the regression, I found that the death of father-in-law decreases men's hourly earnings by around 10 percentage, ceteris paribus. 
+
+Then, a falsification test was conducted by substituting the death of mother-in-law for the death of father-in-law. The results show that there is no decrease in earnings, unlike what we found when we use father-in-law in regression. Thus, the changes that may occur around the time of the death of father-in-law will not change the effect of the death of father-in-law on men's earnings.
+
+Overall, these results indicate that the labor market outcomes of men decline by around 10% to 12% following the loss of father-in-law.
+
+**strengths** 
+
+By using the time-invariant individual fixed effect and the indicator of father-in-law's death, we can capture the marriage network expansion effects. In addition, this paper focuses on the effects of the dissolution of networks(death of father-in-law).It indicates that the effects of networks can persist over time after marriage.
+
+**weaknesses** 
+
+The timing of a person's death may not be completely exogenous to all the decisions been made by a family. For example, the family of an individual who has experience long-time illness can anticipate the death of him and, therefore, alter their decision.
+
+Under this scinaro, the death of father-in-law, who suffered from long-term illness, may release the son-in-law from spending time or money on his father-in-law.  Then, the death of father-in-law may not only capture the effect of losing social connection but also the effect of money and time saved. The effect of loss social connection is negative, but the effect of money and time saved is positive. Thus,the effect of social connection between son-in-law and father-in-law on men's labour market earnings may be underestimated in the original model.
+
+**Suggest further research**
+
+First, we can do further research on how does the labor market effects through marriage network will influence the marriage market. Whether young men tend to find spouse, who has a board social network, especially in state sector?
+
+Second, China started the transition from a socialist economy to a market driven economy since the 1980s. We want to know whether such transition is sufficient for eliminating the inefficiencies associated with this kind of nepotism through marriage. 
+
+**implications for policy**
+
+From social respective, this kind of marriage-driven favoritism may distort wages and decrease efficiency in labor market in China. And because the nepotism are more likely happen in a state-run company(less profit-maximizing), then regulatory system reforming and privatization may be needed to reduce nepotism. 
+
+
+
+
+
+
+

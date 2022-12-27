@@ -1,0 +1,430 @@
+--------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\kyang18\Desktop\look_iv1.log
+  log type:  text
+ opened on:  30 Oct 2017, 10:35:21
+
+. * This command allows the screen to stay only one second on, and then fills up
+>  with more information;
+. set more 1;
+
+. ***********************************;
+. * Read In Data;
+.  * (Note: Change path name so that it is appropriate for your computer);
+. use cig_ch12_IV.dta;
+
+. sort state year;
+
+. des;
+
+Contains data from cig_ch12_IV.dta
+  obs:            96                          
+ vars:            10                          25 Oct 2017 09:26
+ size:         4,320                          
+--------------------------------------------------------------------------------
+              storage  display     value
+variable name   type   format      label      variable label
+--------------------------------------------------------------------------------
+state           str9   %9s                    
+year            float  %9.0g                  
+cpi             float  %9.0g                  
+pop             float  %9.0g                * population from RAs before 1990;
+                                                from web for 1990-2000
+packpc          float  %9.0g                  packs per capita = packs/pop
+income          float  %9.0g                  state personal income (total,
+                                                nominal)
+tax             float  %9.0g                  average state, federal, and
+                                                average local excise taxes for
+                                                fiscal year
+avgprs          float  %9.0g                  average price during fiscal year,
+                                                including sales taxes
+taxs            float  %9.0g                  average excise taxes for fiscal
+                                                year, including sales taxes
+lnp             float  %9.0g                  
+                                            * indicated variables have notes
+--------------------------------------------------------------------------------
+Sorted by:  state  year
+
+. sum;
+
+    Variable |       Obs        Mean    Std. Dev.       Min        Max
+-------------+--------------------------------------------------------
+       state |         0
+        year |        96        1990    5.026247       1985       1995
+         cpi |        96         1.3    .2251758      1.076      1.524
+         pop |        96     5168866     5442345     478447   3.15e+07
+      packpc |        96    109.1824     25.8713    49.2722    197.994
+-------------+--------------------------------------------------------
+      income |        96    9.99e+07    1.21e+08    6887097   7.71e+08
+         tax |        96    42.68403    16.13809         18         99
+      avgprs |        96    143.4479    43.88744   84.96799   240.8497
+        taxs |        96    48.32615    19.33221     21.268    112.633
+         lnp |        96    4.920083    .3039011   4.442275   5.484173
+
+. ************************************************************;
+. *  Creating real values using the cpi;
+. gen ravgprs = avgprs/cpi;
+
+.  label var ravgpr "real average price during fiscal year, including sales
+>   taxes";
+
+. gen rtax = tax/cpi;
+
+.  label var rtax "real average Cig specifice tax during fiscal year";
+
+. gen rtaxs = taxs/cpi;
+
+.  label var rtaxs "real average total tax during fiscal year,including sales ta
+> xes";
+
+. gen rtaxso = rtaxs-rtax;
+
+.  label var rtaxso "real average sales tax per pack during fiscal year";
+
+. gen lpackpc = log(packpc);
+
+. gen lravgprs = log(ravgprs);
+
+. *;
+. * ---- Real Percapita State Income ;
+. gen perinc = income/(pop*cpi);
+
+. gen lperinc = log(perinc);
+
+. encode state, gen(snum);
+
+. * Creating 10-year differences in the variables to deal with unobserved fixef 
+> effects at the state level;
+. gen ltpackpc = log(packpc/packpc[_n-1]);
+(1 missing value generated)
+
+. gen ltavgprs = log(ravgprs/ravgprs[_n-1]);
+(1 missing value generated)
+
+. gen ltperinc = log(perinc/perinc[_n-1]);
+(1 missing value generated)
+
+. gen dtrtaxs  = rtaxs-rtaxs[_n-1];
+(1 missing value generated)
+
+. gen dtrtax   = rtax-rtax[_n-1];
+(1 missing value generated)
+
+. gen dtrtaxso = rtaxso-rtaxso[_n-1];
+(1 missing value generated)
+
+. keep if year==1995;
+(48 observations deleted)
+
+. ************************************************************;
+. * OLS and IV estimation - cross section -- 1995;
+. * Note that all regressions are run with the robust option: reg yvar xvar, r  
+> where r ;
+. * stands for robust and yields the white variance covariance matrix;
+. * to give heteroskedasticity corrected standard errors;
+. ************************************************************;
+. * -- Equation (12.9) in the Stock and Watson book;
+. reg lravgprs rtaxso, r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  1,    46) =   40.39
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.4710
+                                                       Root MSE      =  .09394
+
+------------------------------------------------------------------------------
+             |               Robust
+    lravgprs |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      rtaxso |   .0307289   .0048354     6.35   0.000     .0209956    .0404621
+       _cons |   4.616546   .0289177   159.64   0.000     4.558338    4.674755
+------------------------------------------------------------------------------
+
+. * -- Equation (12.10) and (12.11);
+. * -- OLS -- Not Reported;
+. reg lpackpc lravgprs, r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  1,    46) =   38.86
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.4058
+                                                       Root MSE      =  .18962
+
+------------------------------------------------------------------------------
+             |               Robust
+     lpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lravgprs |  -1.213057   .1945897    -6.23   0.000    -1.604746   -.8213686
+       _cons |   10.33892   .9348204    11.06   0.000     8.457229    12.22062
+------------------------------------------------------------------------------
+
+. * -- IV -- Reported;
+. ivreg lpackpc (lravgprs = rtaxso), r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  1,    46) =   11.54
+                                                       Prob > F      =  0.0014
+                                                       R-squared     =  0.4011
+                                                       Root MSE      =  .19035
+
+------------------------------------------------------------------------------
+             |               Robust
+     lpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lravgprs |  -1.083587   .3189183    -3.40   0.001    -1.725536   -.4416373
+       _cons |   9.719876   1.528322     6.36   0.000     6.643525    12.79623
+------------------------------------------------------------------------------
+Instrumented:  lravgprs
+Instruments:   rtaxso
+------------------------------------------------------------------------------
+
+. * -- controlling for income: Equation (12.15) IV;
+. ivreg lpackpc (lravgprs = rtaxso) lperinc, r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  2,    45) =    8.19
+                                                       Prob > F      =  0.0009
+                                                       R-squared     =  0.4189
+                                                       Root MSE      =  .18957
+
+------------------------------------------------------------------------------
+             |               Robust
+     lpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lravgprs |  -1.143375   .3723025    -3.07   0.004    -1.893231   -.3935191
+     lperinc |    .214515   .3117467     0.69   0.495     -.413375     .842405
+       _cons |   9.430658   1.259392     7.49   0.000     6.894112     11.9672
+------------------------------------------------------------------------------
+Instrumented:  lravgprs
+Instruments:   lperinc rtaxso
+------------------------------------------------------------------------------
+
+. * --  controlling for income and using two instruments: Equation (12.16) IV;
+. ivreg lpackpc (lravgprs = rtaxso rtaxs) lperinc, r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  2,    45) =   16.17
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.4294
+                                                       Root MSE      =  .18786
+
+------------------------------------------------------------------------------
+             |               Robust
+     lpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    lravgprs |  -1.277424   .2496099    -5.12   0.000    -1.780164   -.7746837
+     lperinc |   .2804045   .2538894     1.10   0.275     -.230955    .7917641
+       _cons |   9.894955   .9592169    10.32   0.000     7.962993    11.82692
+------------------------------------------------------------------------------
+Instrumented:  lravgprs
+Instruments:   lperinc rtaxso rtaxs
+------------------------------------------------------------------------------
+
+. ************************************************************;
+. * OLS and IV estimation - Differences 1995-1985;
+. * Creating Table 12.1 in the stock and watson chapter;
+. * using the first differences in the variables, accounting  for;
+. * unobserved fixed effects
+> ************************************************************;
+. * -- OLS -- Not Reported;
+. reg ltpackpc ltavgprs ltperinc,r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  2,    45) =   23.75
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.5561
+                                                       Root MSE      =  .09029
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    ltavgprs |  -1.055974   .1602452    -6.59   0.000    -1.378724   -.7332236
+    ltperinc |   .4974422   .3236409     1.54   0.131     -.154404    1.149288
+       _cons |  -.0885341   .0581846    -1.52   0.135     -.205724    .0286557
+------------------------------------------------------------------------------
+
+. * col(1);
+. * -- IV -- Reported;
+. ivreg ltpackpc (ltavgprs = dtrtaxso)  ltperinc, r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  2,    45) =   12.31
+                                                       Prob > F      =  0.0001
+                                                       R-squared     =  0.5499
+                                                       Root MSE      =  .09092
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    ltavgprs |  -.9380143   .2075022    -4.52   0.000    -1.355945   -.5200834
+    ltperinc |   .5259693   .3394941     1.55   0.128     -.157807    1.209746
+       _cons |  -.1179623   .0682167    -1.73   0.091    -.2553577    .0194331
+------------------------------------------------------------------------------
+Instrumented:  ltavgprs
+Instruments:   ltperinc dtrtaxso
+------------------------------------------------------------------------------
+
+. * checking first stage;
+. reg ltavgprs dtrtaxso ltperinc, r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  2,    45) =   16.84
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.5146
+                                                       Root MSE      =  .06334
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltavgprs |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    dtrtaxso |   .0254611   .0043876     5.80   0.000      .016624    .0342982
+    ltperinc |  -.2241036   .2188815    -1.02   0.311    -.6649537    .2167464
+       _cons |   .1841068   .0295315     6.23   0.000     .1246273    .2435863
+------------------------------------------------------------------------------
+
+. test dtrtaxso;
+
+ ( 1)  dtrtaxso = 0
+
+       F(  1,    45) =   33.67
+            Prob > F =    0.0000
+
+. * -- IV -- Reported;
+. ivreg ltpackpc (ltavgprs = dtrtax)  ltperinc, r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  2,    45) =   20.57
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.5197
+                                                       Root MSE      =  .09392
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    ltavgprs |  -1.342515   .2286606    -5.87   0.000    -1.803061   -.8819687
+    ltperinc |   .4281457   .2987177     1.43   0.159    -.1735027    1.029794
+       _cons |  -.0170489   .0672167    -0.25   0.801    -.1524302    .1183324
+------------------------------------------------------------------------------
+Instrumented:  ltavgprs
+Instruments:   ltperinc dtrtax
+------------------------------------------------------------------------------
+
+. reg ltavgprs dtrtax ltperinc, r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  2,    45) =   60.21
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.6796
+                                                       Root MSE      =  .05147
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltavgprs |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      dtrtax |   .0100958   .0009752    10.35   0.000     .0081317    .0120599
+    ltperinc |   .0294024   .1310132     0.22   0.823    -.2344716    .2932765
+       _cons |   .1547736   .0200788     7.71   0.000     .1143327    .1952144
+------------------------------------------------------------------------------
+
+. test dtrtax;
+
+ ( 1)  dtrtax = 0
+
+       F(  1,    45) =  107.18
+            Prob > F =    0.0000
+
+. * -- IV -- Reported with two instruments: general sales tax and specific tax o
+> n cigarettes by state;
+. ivreg ltpackpc (ltavgprs = dtrtax dtrtaxso) ltperinc, r;
+
+Instrumental variables (2SLS) regression               Number of obs =      48
+                                                       F(  2,    45) =   21.30
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.5466
+                                                       Root MSE      =  .09125
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltpackpc |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    ltavgprs |  -1.202403   .1969433    -6.11   0.000    -1.599068   -.8057393
+    ltperinc |     .46203   .3093404     1.49   0.142    -.1610137    1.085074
+       _cons |  -.0520034   .0624876    -0.83   0.410    -.1778599    .0738531
+------------------------------------------------------------------------------
+Instrumented:  ltavgprs
+Instruments:   ltperinc dtrtax dtrtaxso
+------------------------------------------------------------------------------
+
+. * We want to construct the test of overidentification to see about which instr
+> uments are;
+. * valid using both conditions;
+. * For the J test, first we take residuals from the previous IV regression;
+. predict e, resid;
+
+. * then we regress the residuals against the instruments and the exogenous vari
+> able;
+.  reg e dtrtaxso dtrtax ltperinc;
+
+      Source |       SS       df       MS              Number of obs =      48
+-------------+------------------------------           F(  3,    44) =    1.64
+       Model |  .037769161     3   .01258972           Prob > F      =  0.1929
+    Residual |  .336952225    44  .007658005           R-squared     =  0.1008
+-------------+------------------------------           Adj R-squared =  0.0395
+       Total |  .374721386    47  .007972795           Root MSE      =  .08751
+
+------------------------------------------------------------------------------
+           e |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+    dtrtaxso |   .0127669   .0061587     2.07   0.044      .000355    .0251789
+      dtrtax |  -.0038077   .0021179    -1.80   0.079     -.008076    .0004607
+    ltperinc |  -.0934062   .2978459    -0.31   0.755    -.6936751    .5068627
+       _cons |    .002939   .0446131     0.07   0.948    -.0869728    .0928509
+------------------------------------------------------------------------------
+
+.   drop e;
+
+.   * we now test for the signicance of the instruments but recall we are overid
+> entified m>k: 2>1, ;
+. * and the test has degrees of freedom m-k, ;
+.   * qui stands for quietly i.e. do not display output;
+.   qui test dtrtaxso dtrtax;
+
+.     dis "---- OverID stat:  " r(df)*r(F)
+>      _skip(10) "p-value:  "  chiprob(r(df)-1,r(df)*r(F)) " -----";
+---- OverID stat:  4.9319843          p-value:  .02636403 -----
+
+. reg ltavgprs dtrtax dtrtaxso ltperinc, r;
+
+Linear regression                                      Number of obs =      48
+                                                       F(  3,    44) =   66.68
+                                                       Prob > F      =  0.0000
+                                                       R-squared     =  0.7779
+                                                       Root MSE      =  .04333
+
+------------------------------------------------------------------------------
+             |               Robust
+    ltavgprs |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+      dtrtax |   .0075734   .0008859     8.55   0.000     .0057879    .0093588
+    dtrtaxso |    .013457   .0031405     4.28   0.000     .0071277    .0197863
+    ltperinc |  -.0289943    .124231    -0.23   0.817    -.2793654    .2213767
+       _cons |   .1438853   .0183233     7.85   0.000     .1069571    .1808135
+------------------------------------------------------------------------------
+
+. test dtrtax dtrtaxso;
+
+ ( 1)  dtrtax = 0
+ ( 2)  dtrtaxso = 0
+
+       F(  2,    44) =   88.62
+            Prob > F =    0.0000
+
+. log close;
+      name:  <unnamed>
+       log:  C:\Users\kyang18\Desktop\look_iv1.log
+  log type:  text
+ closed on:  30 Oct 2017, 10:35:22
+--------------------------------------------------------------------------------

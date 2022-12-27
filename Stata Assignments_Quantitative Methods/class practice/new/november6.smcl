@@ -1,0 +1,565 @@
+{smcl}
+{txt}{sf}{ul off}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}F:\Econ 665\class practice\new\november6.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Dec 2017, 01:01:47
+{txt}
+{com}. clear
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. 
+. //use Happiness.dta
+. use "Happiness.dta"
+{txt}
+{com}. des
+
+{txt}Contains data from {res}Happiness.dta
+{txt}  obs:{res}            16                          
+{txt} vars:{res}             7                          16 Feb 2015 09:31
+{txt} size:{res}           448                          
+{txt}{hline}
+              storage   display    value
+variable name   type    format     label      variable label
+{hline}
+{p 0 48}{res}{bind:id             }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:id       }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income         }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:happiness      }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income1000     }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income1000DM   }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:happinessDM    }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:car_ownership  }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{txt}{hline}
+Sorted by: 
+
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. des
+
+{txt}Contains data from {res}Happiness.dta
+{txt}  obs:{res}            16                          
+{txt} vars:{res}             7                          16 Feb 2015 09:31
+{txt} size:{res}           448                          
+{txt}{hline}
+              storage   display    value
+variable name   type    format     label      variable label
+{hline}
+{p 0 48}{res}{bind:id             }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:id       }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income         }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:happiness      }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income1000     }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:income1000DM   }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:happinessDM    }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{p 0 48}{bind:car_ownership  }{txt}{bind: float   }{bind:{txt}%9.0g     }{space 1}{bind:         }{bind:  }{res}{res}{p_end}
+{txt}{hline}
+Sorted by: 
+
+{com}. 
+. * // simple regression
+. reg happiness income1000 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        16
+{txt}{hline 13}{c +}{hline 34}   F(1, 14)        = {res}     5.75
+{txt}       Model {c |} {res} 31.9560368         1  31.9560368   {txt}Prob > F        ={res}    0.0310
+{txt}    Residual {c |} {res} 77.7939632        14  5.55671165   {txt}R-squared       ={res}    0.2912
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2405
+{txt}       Total {c |} {res}     109.75        15  7.31666667   {txt}Root MSE        =   {res} 2.3573
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}   happiness{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 2}income1000 {c |}{col 14}{res}{space 2}-.0946145{col 26}{space 2} .0394539{col 37}{space 1}   -2.40{col 46}{space 3}0.031{col 54}{space 4}-.1792347{col 67}{space 3}-.0099943
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 10.87447{col 26}{space 2} 2.367769{col 37}{space 1}    4.59{col 46}{space 3}0.000{col 54}{space 4} 5.796107{col 67}{space 3} 15.95282
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. 
+. generate Dbob=id==1 if !missing(id)
+{txt}
+{com}. generate Dsarah=id==2 if !missing(id)
+{txt}
+{com}. generate Dpeter=id==3 if !missing(id)
+{txt}
+{com}. generate Dnicole=id==4 if !missing(id)
+{txt}
+{com}. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. generate Dnicole=id==4 if !missing(id)
+{err}variable {bf}Dnicole{sf} already defined
+{txt}{search r(110), local:r(110);}
+
+end of do-file
+
+{search r(110), local:r(110);}
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. 
+. regress happiness Dsarah Dpeter Dnicole income1000
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        16
+{txt}{hline 13}{c +}{hline 34}   F(4, 11)        = {res}    24.47
+{txt}       Model {c |} {res} 98.6638594         4  24.6659649   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 11.0861406        11  1.00783096   {txt}R-squared       ={res}    0.8990
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.8623
+{txt}       Total {c |} {res}     109.75        15  7.31666667   {txt}Root MSE        =   {res} 1.0039
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}   happiness{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Dsarah {c |}{col 14}{res}{space 2} 5.111141{col 26}{space 2} .8916484{col 37}{space 1}    5.73{col 46}{space 3}0.000{col 54}{space 4} 3.148636{col 67}{space 3} 7.073646
+{txt}{space 6}Dpeter {c |}{col 14}{res}{space 2} 4.226857{col 26}{space 2} .7155433{col 37}{space 1}    5.91{col 46}{space 3}0.000{col 54}{space 4} 2.651957{col 67}{space 3} 5.801757
+{txt}{space 5}Dnicole {c |}{col 14}{res}{space 2} 9.410411{col 26}{space 2} 1.271248{col 37}{space 1}    7.40{col 46}{space 3}0.000{col 54}{space 4} 6.612413{col 67}{space 3} 12.20841
+{txt}{space 2}income1000 {c |}{col 14}{res}{space 2} .0824934{col 26}{space 2} .0327004{col 37}{space 1}    2.52{col 46}{space 3}0.028{col 54}{space 4} .0105203{col 67}{space 3} .1544665
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-4.107029{col 26}{space 2}  2.37537{col 37}{space 1}   -1.73{col 46}{space 3}0.112{col 54}{space 4}-9.335184{col 67}{space 3} 1.121125
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. gen Bob = -4.107029 + 0.0824934*income1000
+{txt}
+{com}. gen Sarah = -4.107029 + 5.111141 + 0.0824934*income1000
+{txt}
+{com}. gen Peter = -4.107029 + 4.226857 + 0.0824934*income1000
+{txt}
+{com}. gen Nicole = -4.107029 + 9.410411 + 0.0824934*income1000
+{txt}
+{com}. graph twoway line Bob income1000 || line Sarah income1000 || line Peter income1000 || line Nicole income1000 // fixed effects model 
+{res}{txt}
+{com}. 
+. * // analogous fixed effects model
+. reg happinessDM income1000DM 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        16
+{txt}{hline 13}{c +}{hline 34}   F(1, 14)        = {res}     8.10
+{txt}       Model {c |} {res} 6.41385942         1  6.41385942   {txt}Prob > F        ={res}    0.0130
+{txt}    Residual {c |} {res} 11.0861406        14  .791867185   {txt}R-squared       ={res}    0.3665
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.3213
+{txt}       Total {c |} {res}       17.5        15  1.16666667   {txt}Root MSE        =   {res} .88987
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1} happinessDM{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+income1000DM {c |}{col 14}{res}{space 2} .0824934{col 26}{space 2} .0289858{col 37}{space 1}    2.85{col 46}{space 3}0.013{col 54}{space 4}  .020325{col 67}{space 3} .1446618
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}        0{col 26}{space 2} .2224673{col 37}{space 1}    0.00{col 46}{space 3}1.000{col 54}{space 4}-.4771449{col 67}{space 3} .4771449
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. *  // simple regression
+. reg happiness income1000
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}        16
+{txt}{hline 13}{c +}{hline 34}   F(1, 14)        = {res}     5.75
+{txt}       Model {c |} {res} 31.9560368         1  31.9560368   {txt}Prob > F        ={res}    0.0310
+{txt}    Residual {c |} {res} 77.7939632        14  5.55671165   {txt}R-squared       ={res}    0.2912
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.2405
+{txt}       Total {c |} {res}     109.75        15  7.31666667   {txt}Root MSE        =   {res} 2.3573
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}   happiness{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 2}income1000 {c |}{col 14}{res}{space 2}-.0946145{col 26}{space 2} .0394539{col 37}{space 1}   -2.40{col 46}{space 3}0.031{col 54}{space 4}-.1792347{col 67}{space 3}-.0099943
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 10.87447{col 26}{space 2} 2.367769{col 37}{space 1}    4.59{col 46}{space 3}0.000{col 54}{space 4} 5.796107{col 67}{space 3} 15.95282
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Now doing it using the xt commands
+. xtset id
+{txt}{col 8}panel variable:  {res}id (balanced)
+{txt}
+{com}. 
+. // fixed effects model
+. xtreg happiness income1000,fe
+{res}
+{txt}Fixed-effects (within) regression{col 49}Number of obs{col 67}={col 69}{res}        16
+{txt}Group variable: {res}id{txt}{col 49}Number of groups{col 67}={col 69}{res}         4
+
+{txt}R-sq:{col 49}Obs per group:
+     within  = {res}0.3665{col 63}{txt}min{col 67}={col 69}{res}         4
+{txt}     between = {res}0.7123{col 63}{txt}avg{col 67}={col 69}{res}       4.0
+{txt}     overall = {res}0.2912{col 63}{txt}max{col 67}={col 69}{res}         4
+
+{txt}{col 49}F({res}1{txt},{res}11{txt}){col 67}={col 70}{res}     6.36
+{txt}corr(u_i, Xb){col 16}= {res}-0.7916{txt}{col 49}Prob > F{col 67}={col 73}{res}0.0283
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}   happiness{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      t{col 46}   P>|t|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 2}income1000 {c |}{col 14}{res}{space 2} .0824934{col 26}{space 2} .0327004{col 37}{space 1}    2.52{col 46}{space 3}0.028{col 54}{space 4} .0105203{col 67}{space 3} .1544665
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} .5800729{col 26}{space 2}  1.91721{col 37}{space 1}    0.30{col 46}{space 3}0.768{col 54}{space 4}-3.639677{col 67}{space 3} 4.799823
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} 3.8587653
+     {txt}sigma_e {c |} {res} 1.0039078
+         {txt}rho {c |} {res} .93660603{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+F test that all u_i=0: F({res}3{txt}, {res}11{txt}) = {res}22.06{col 62}{txt}Prob > F = {res}0.0001
+{txt}
+{com}. 
+. 
+. 
+. 
+. 
+. 
+. * Another large panel data set
+. clear
+{txt}
+{com}. use "BritishHouseholdPanel.dta"
+{txt}
+{com}. 
+. xtset id year
+{res}{txt}{col 8}panel variable:  {res}id (unbalanced)
+{txt}{col 9}time variable:  {res}{col 25}year, 1991 to 2005, but with gaps
+{txt}{col 17}delta:  {res}1 unit
+{txt}
+{com}. 
+. tab year
+
+      {txt}Year of interview {c |}      Freq.     Percent        Cum.
+{hline 24}{c +}{hline 35}
+                   1991 {c |}{res}      4,019        6.35        6.35
+{txt}                   1992 {c |}{res}      4,018        6.35       12.70
+{txt}                   1993 {c |}{res}      4,042        6.39       19.09
+{txt}                   1994 {c |}{res}      4,134        6.53       25.62
+{txt}                   1995 {c |}{res}      4,066        6.42       32.04
+{txt}                   1996 {c |}{res}      4,402        6.96       39.00
+{txt}                   1997 {c |}{res}      4,502        7.11       46.11
+{txt}                   1998 {c |}{res}      4,552        7.19       53.31
+{txt}                   1999 {c |}{res}      4,175        6.60       59.90
+{txt}                   2000 {c |}{res}      4,162        6.58       66.48
+{txt}                   2001 {c |}{res}      4,427        7.00       73.48
+{txt}                   2002 {c |}{res}      4,312        6.81       80.29
+{txt}                   2003 {c |}{res}      4,247        6.71       87.00
+{txt}                   2004 {c |}{res}      4,189        6.62       93.62
+{txt}                   2005 {c |}{res}      4,038        6.38      100.00
+{txt}{hline 24}{c +}{hline 35}
+                  Total {c |}{res}     63,285      100.00
+{txt}
+{com}. xtdescribe
+
+      {txt}id:  {res}10014578{txt}, {res}10014608{txt}, ..., {res}1.596e+08                {txt}n ={res}       7602
+    {txt}year:  {res}1991, 1992, ..., 2005                             {txt}T ={res}         15
+           {txt}Delta(year) = {res}1 unit
+           {txt}Span(year)  = {res}15 periods
+           {txt}(id*year uniquely identifies each observation)
+
+Distribution of T_i:   min      5%     25%       50%       75%     95%     max
+                    {res}     1       1       4         8        13      15      15
+
+{txt}{col 6}Freq.  Percent    Cum. {c |}  Pattern
+ {hline 27}{c +}{c -}{c -}{hline 15}
+{res}     1190     15.65   15.65{txt} {c |}  {res}111111111111111
+      169      2.22   17.88{txt} {c |}  {res}1111...........
+      167      2.20   20.07{txt} {c |}  {res}.............11
+      146      1.92   21.99{txt} {c |}  {res}..........11111
+      136      1.79   23.78{txt} {c |}  {res}.......11111111
+      134      1.76   25.55{txt} {c |}  {res}1..............
+      123      1.62   27.16{txt} {c |}  {res}...........1111
+      122      1.60   28.77{txt} {c |}  {res}11.............
+      115      1.51   30.28{txt} {c |}  {res}............111
+     5300     69.72  100.00{txt} {c |} (other patterns)
+ {hline 27}{c +}{c -}{c -}{hline 15}
+{res}     7602    100.00        {txt} {c |}  {res}XXXXXXXXXXXXXXX
+{txt}
+{com}. xtsum
+
+{txt}Variable         {c |}      Mean   Std. Dev.       Min        Max {c |}    Observations
+{hline 17}{c +}{hline 44}{c +}{hline 16}
+id{col 10}overall {c |} {res} 2.30e+07   2.30e+07   1.00e+07   1.60e+08{txt} {c |}{col 69}N =   63285
+{col 10}between {c |}{col 31}{res} 3.37e+07   1.00e+07   1.60e+08{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res}        0   2.30e+07   2.30e+07{txt} {c |} T-bar = 8.32478
+{col 18}{c |}{col 63}{c |}
+age{col 10}overall {c |} {res} 41.28089   11.30308         20         64{txt} {c |}{col 69}N =   63285
+{col 10}between {c |}{col 31}{res} 11.93296         20         64{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} 3.609779   31.90589   56.58089{txt} {c |} T-bar = 8.32478
+{col 18}{c |}{col 63}{c |}
+mastat{col 10}overall {c |} {res}  1.36923   .9146139          1          6{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res}  .711588          1          6{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res}  .608963  -2.186325   5.914685{txt} {c |} T-bar = 8.32452
+{col 18}{c |}{col 63}{c |}
+year{col 10}overall {c |} {res}  1998.05   4.266235       1991       2005{txt} {c |}{col 69}N =   63285
+{col 10}between {c |}{col 31}{res} 3.304988       1991       2005{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} 3.616413    1988.65   2007.907{txt} {c |} T-bar = 8.32478
+{col 18}{c |}{col 63}{c |}
+mental{col 10}overall {c |} {res}-.0111341    .932886  -1.974992   4.379388{txt} {c |}{col 69}N =   62551
+{col 10}between {c |}{col 31}{res} .6733345  -1.974992   3.670952{txt} {c |}{col 69}n =    7584
+{col 10}within  {c |}{col 31}{res} .6973295  -3.571402   5.117021{txt} {c |} T-bar = 8.24776
+{col 18}{c |}{col 63}{c |}
+woman{col 10}overall {c |} {res} .5121277   .4998568          0          1{txt} {c |}{col 69}N =   63285
+{col 10}between {c |}{col 31}{res} .5000105          0          1{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res}        0   .5121277   .5121277{txt} {c |} T-bar = 8.32478
+{col 18}{c |}{col 63}{c |}
+married{col 10}overall {c |} {res} .7796565   .4144816          0          1{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res} .4049151          0          1{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} .2192952  -.1536769    1.71299{txt} {c |} T-bar = 8.32452
+{col 18}{c |}{col 63}{c |}
+couple{col 10}overall {c |} {res} .1672961    .373243          0          1{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res} .3792531          0          1{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} .2054491  -.7660372   1.100629{txt} {c |} T-bar = 8.32452
+{col 18}{c |}{col 63}{c |}
+separa~d{col 10}overall {c |} {res} .0142218   .1184052          0          1{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res} .0584497          0         .8{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} .1032965  -.7857782   .9475552{txt} {c |} T-bar = 8.32452
+{col 18}{c |}{col 63}{c |}
+divorced{col 10}overall {c |} {res} .0245406   .1547213          0          1{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res} .0915751          0          1{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res}  .116867  -.8504594   .9578739{txt} {c |} T-bar = 8.32452
+{col 18}{c |}{col 63}{c |}
+never_~d{col 10}overall {c |} {res}  .014285   .1186642          0          1{txt} {c |}{col 69}N =   63283
+{col 10}between {c |}{col 31}{res} .0921334          0          1{txt} {c |}{col 69}n =    7602
+{col 10}within  {c |}{col 31}{res} .0850545  -.8746039   .9476184{txt} {c |} T-bar = 8.32452
+
+{com}. 
+. * // simple regression
+. reg mental age woman couple separated divorced never_married  
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    62,549
+{txt}{hline 13}{c +}{hline 34}   F(6, 62542)     = {res}   208.54
+{txt}       Model {c |} {res} 1067.66694         6  177.944491   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 53366.0332    62,542  .853283125   {txt}R-squared       ={res}    0.0196
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0195
+{txt}       Total {c |} {res} 54433.7002    62,548  .870270835   {txt}Root MSE        =   {res} .92373
+
+{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2} .0024708{col 27}{space 2} .0003504{col 38}{space 1}    7.05{col 47}{space 3}0.000{col 55}{space 4}  .001784{col 68}{space 3} .0031576
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .2023694{col 27}{space 2} .0074189{col 38}{space 1}   27.28{col 47}{space 3}0.000{col 55}{space 4} .1878285{col 68}{space 3} .2169104
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0075139{col 27}{space 2} .0105725{col 38}{space 1}    0.71{col 47}{space 3}0.477{col 55}{space 4}-.0132083{col 68}{space 3} .0282361
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .5583078{col 27}{space 2} .0312398{col 38}{space 1}   17.87{col 47}{space 3}0.000{col 55}{space 4} .4970777{col 68}{space 3} .6195378
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .2241774{col 27}{space 2} .0239372{col 38}{space 1}    9.37{col 47}{space 3}0.000{col 55}{space 4} .1772605{col 68}{space 3} .2710943
+{txt}never_married {c |}{col 15}{res}{space 2} .2236556{col 27}{space 2} .0315205{col 38}{space 1}    7.10{col 47}{space 3}0.000{col 55}{space 4} .1618755{col 68}{space 3} .2854358
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2346901{col 27}{space 2}   .01642{col 38}{space 1}  -14.29{col 47}{space 3}0.000{col 55}{space 4}-.2668732{col 68}{space 3} -.202507
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Let's look at heteroskedasticity
+. quietly reg mental age woman couple separated divorced never_married
+{txt}
+{com}. predict Pmental
+{txt}(option {bf:xb} assumed; fitted values)
+(2 missing values generated)
+
+{com}. gen Rmental=mental-Pmental
+{txt}(736 missing values generated)
+
+{com}. 
+. * //graphs the residuals against the fitted values
+. scatter Rmental Pmental 
+{res}{txt}
+{com}. 
+. * //Breusch-Pagan/Cook-Weisberg test for heteroskedasticity
+. hettest 
+
+{txt}Breusch-Pagan / Cook-Weisberg test for heteroskedasticity 
+         Ho: Constant variance
+{p 9 20}Variables: fitted values of mental
+
+{col 10}chi2({res}1{txt}){col 23}={res}  1243.72
+{txt}{col 10}Prob > chi2{col 23}={res}   0.0000
+{txt}
+{com}. 
+. * // regression using the robust and cluster options
+. regress mental age woman couple separated divorced never_married, vce(cluster id)
+
+{txt}Linear regression                               Number of obs     = {res}    62,549
+                                                {txt}F(6, 7583)        =  {res}    51.97
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0196
+                                                {txt}Root MSE          =    {res} .92373
+
+{txt}{ralign 79:(Std. Err. adjusted for {res:7,584} clusters in id)}
+{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 15}{c |}{col 27}    Robust
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2} .0024708{col 27}{space 2} .0006718{col 38}{space 1}    3.68{col 47}{space 3}0.000{col 55}{space 4} .0011539{col 68}{space 3} .0037877
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .2023694{col 27}{space 2}  .015618{col 38}{space 1}   12.96{col 47}{space 3}0.000{col 55}{space 4} .1717538{col 68}{space 3} .2329851
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0075139{col 27}{space 2} .0178959{col 38}{space 1}    0.42{col 47}{space 3}0.675{col 55}{space 4} -.027567{col 68}{space 3} .0425948
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .5583078{col 27}{space 2} .0559887{col 38}{space 1}    9.97{col 47}{space 3}0.000{col 55}{space 4} .4485543{col 68}{space 3} .6680612
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .2241774{col 27}{space 2} .0481785{col 38}{space 1}    4.65{col 47}{space 3}0.000{col 55}{space 4} .1297343{col 68}{space 3} .3186205
+{txt}never_married {c |}{col 15}{res}{space 2} .2236556{col 27}{space 2} .0561824{col 38}{space 1}    3.98{col 47}{space 3}0.000{col 55}{space 4} .1135226{col 68}{space 3} .3337886
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2346901{col 27}{space 2} .0305801{col 38}{space 1}   -7.67{col 47}{space 3}0.000{col 55}{space 4}-.2946356{col 68}{space 3}-.1747446
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. regress mental age woman couple separated divorced never_married,robust clust(id)
+
+{txt}Linear regression                               Number of obs     = {res}    62,549
+                                                {txt}F(6, 7583)        =  {res}    51.97
+                                                {txt}Prob > F          = {res}    0.0000
+                                                {txt}R-squared         = {res}    0.0196
+                                                {txt}Root MSE          =    {res} .92373
+
+{txt}{ralign 79:(Std. Err. adjusted for {res:7,584} clusters in id)}
+{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 15}{c |}{col 27}    Robust
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2} .0024708{col 27}{space 2} .0006718{col 38}{space 1}    3.68{col 47}{space 3}0.000{col 55}{space 4} .0011539{col 68}{space 3} .0037877
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .2023694{col 27}{space 2}  .015618{col 38}{space 1}   12.96{col 47}{space 3}0.000{col 55}{space 4} .1717538{col 68}{space 3} .2329851
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0075139{col 27}{space 2} .0178959{col 38}{space 1}    0.42{col 47}{space 3}0.675{col 55}{space 4} -.027567{col 68}{space 3} .0425948
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .5583078{col 27}{space 2} .0559887{col 38}{space 1}    9.97{col 47}{space 3}0.000{col 55}{space 4} .4485543{col 68}{space 3} .6680612
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .2241774{col 27}{space 2} .0481785{col 38}{space 1}    4.65{col 47}{space 3}0.000{col 55}{space 4} .1297343{col 68}{space 3} .3186205
+{txt}never_married {c |}{col 15}{res}{space 2} .2236556{col 27}{space 2} .0561824{col 38}{space 1}    3.98{col 47}{space 3}0.000{col 55}{space 4} .1135226{col 68}{space 3} .3337886
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2346901{col 27}{space 2} .0305801{col 38}{space 1}   -7.67{col 47}{space 3}0.000{col 55}{space 4}-.2946356{col 68}{space 3}-.1747446
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. * Now, let's do the between regression.  First we will collapse the data set at the level of id, taking
+. * the average of the variables by id
+. 
+. quietly regress mental age woman couple separated divorced never_married
+{txt}
+{com}. collapse (mean) mental age woman couple separated divorced never_married if e(sample), by(id)  // this alters the data structure
+{txt}
+{com}. 
+. * the data set is no longer panel.  It is a cross section.
+. * // between effects model
+. regress mental age woman couple separated divorced never_married 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}     7,584
+{txt}{hline 13}{c +}{hline 34}   F(6, 7577)      = {res}    47.72
+{txt}       Model {c |} {res} 125.183024         6  20.8638373   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 3312.90297     7,577  .437231486   {txt}R-squared       ={res}    0.0364
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0356
+{txt}       Total {c |} {res} 3438.08599     7,583  .453393906   {txt}Root MSE        =   {res} .66123
+
+{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2}  .002414{col 27}{space 2} .0007231{col 38}{space 1}    3.34{col 47}{space 3}0.001{col 55}{space 4} .0009965{col 68}{space 3} .0038315
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .1949775{col 27}{space 2}  .015271{col 38}{space 1}   12.77{col 47}{space 3}0.000{col 55}{space 4} .1650422{col 68}{space 3} .2249129
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0357703{col 27}{space 2} .0225018{col 38}{space 1}    1.59{col 47}{space 3}0.112{col 55}{space 4}-.0083394{col 68}{space 3}   .07988
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .7931771{col 27}{space 2} .1325742{col 38}{space 1}    5.98{col 47}{space 3}0.000{col 55}{space 4} .5332951{col 68}{space 3} 1.053059
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .5139704{col 27}{space 2} .0847859{col 38}{space 1}    6.06{col 47}{space 3}0.000{col 55}{space 4} .3477666{col 68}{space 3} .6801743
+{txt}never_married {c |}{col 15}{res}{space 2} .3309017{col 27}{space 2} .0819682{col 38}{space 1}    4.04{col 47}{space 3}0.000{col 55}{space 4} .1702214{col 68}{space 3} .4915821
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2518096{col 27}{space 2} .0346075{col 38}{space 1}   -7.28{col 47}{space 3}0.000{col 55}{space 4}-.3196499{col 68}{space 3}-.1839692
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+. 
+. 
+. 
+. 
+. 
+. * // Let's redo the between effects model without altering the data structure
+. clear
+{txt}
+{com}. use "BritishHouseholdPanel.dta"
+{txt}
+{com}. 
+. xtreg mental age woman couple separated divorced never_married, be 
+
+{txt}Between regression (regression on group means)  Number of obs     = {res}    62,549
+{txt}Group variable: {res}id                              {txt}Number of groups  = {res}     7,584
+
+{txt}R-sq:                                           Obs per group:
+     within  = {res}0.0025                                         {txt}min = {res}         1
+{txt}     between = {res}0.0364                                         {txt}avg = {res}       8.2
+{txt}     overall = {res}0.0179                                         {txt}max = {res}        15
+
+                                                {txt}F({res}6{txt},{res}7577{txt})         =  {res}    47.72
+{txt}sd(u_i + avg(e_i.))= {res} .6612348                  {txt}Prob > F          =     {res}0.0000
+
+{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2}  .002414{col 27}{space 2} .0007231{col 38}{space 1}    3.34{col 47}{space 3}0.001{col 55}{space 4} .0009965{col 68}{space 3} .0038315
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .1949775{col 27}{space 2}  .015271{col 38}{space 1}   12.77{col 47}{space 3}0.000{col 55}{space 4} .1650422{col 68}{space 3} .2249129
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0357703{col 27}{space 2} .0225018{col 38}{space 1}    1.59{col 47}{space 3}0.112{col 55}{space 4}-.0083394{col 68}{space 3}   .07988
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .7931772{col 27}{space 2} .1325742{col 38}{space 1}    5.98{col 47}{space 3}0.000{col 55}{space 4} .5332951{col 68}{space 3} 1.053059
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .5139704{col 27}{space 2} .0847859{col 38}{space 1}    6.06{col 47}{space 3}0.000{col 55}{space 4} .3477666{col 68}{space 3} .6801743
+{txt}never_married {c |}{col 15}{res}{space 2} .3309017{col 27}{space 2} .0819682{col 38}{space 1}    4.04{col 47}{space 3}0.000{col 55}{space 4} .1702214{col 68}{space 3} .4915821
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2518096{col 27}{space 2} .0346075{col 38}{space 1}   -7.28{col 47}{space 3}0.000{col 55}{space 4}-.3196499{col 68}{space 3}-.1839692
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. * note how the coefficients are under the be option compared to the regression done on the 
+. * collapsed (Averaged by id) data set
+. regress mental age woman couple separated divorced never_married 
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}    62,549
+{txt}{hline 13}{c +}{hline 34}   F(6, 62542)     = {res}   208.54
+{txt}       Model {c |} {res} 1067.66694         6  177.944491   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 53366.0332    62,542  .853283125   {txt}R-squared       ={res}    0.0196
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.0195
+{txt}       Total {c |} {res} 54433.7002    62,548  .870270835   {txt}Root MSE        =   {res} .92373
+
+{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2} .0024708{col 27}{space 2} .0003504{col 38}{space 1}    7.05{col 47}{space 3}0.000{col 55}{space 4}  .001784{col 68}{space 3} .0031576
+{txt}{space 8}woman {c |}{col 15}{res}{space 2} .2023694{col 27}{space 2} .0074189{col 38}{space 1}   27.28{col 47}{space 3}0.000{col 55}{space 4} .1878285{col 68}{space 3} .2169104
+{txt}{space 7}couple {c |}{col 15}{res}{space 2} .0075139{col 27}{space 2} .0105725{col 38}{space 1}    0.71{col 47}{space 3}0.477{col 55}{space 4}-.0132083{col 68}{space 3} .0282361
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .5583078{col 27}{space 2} .0312398{col 38}{space 1}   17.87{col 47}{space 3}0.000{col 55}{space 4} .4970777{col 68}{space 3} .6195378
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2} .2241774{col 27}{space 2} .0239372{col 38}{space 1}    9.37{col 47}{space 3}0.000{col 55}{space 4} .1772605{col 68}{space 3} .2710943
+{txt}never_married {c |}{col 15}{res}{space 2} .2236556{col 27}{space 2} .0315205{col 38}{space 1}    7.10{col 47}{space 3}0.000{col 55}{space 4} .1618755{col 68}{space 3} .2854358
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.2346901{col 27}{space 2}   .01642{col 38}{space 1}  -14.29{col 47}{space 3}0.000{col 55}{space 4}-.2668732{col 68}{space 3} -.202507
+{txt}{hline 14}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}{txt}
+{com}. 
+.  
+. * Now let's abstract from the functional form xb and let's concentrate on the error term
+. xtset id
+{txt}{col 8}panel variable:  {res}id (unbalanced)
+{txt}
+{com}. 
+. * // fixed effects model
+. xtreg mental age woman couple separated divorced never_married, fe 
+{p 0 6 2}{txt}note: woman omitted because of collinearity{p_end}
+{res}
+{txt}Fixed-effects (within) regression{col 49}Number of obs{col 67}={col 69}{res}    62,549
+{txt}Group variable: {res}id{txt}{col 49}Number of groups{col 67}={col 69}{res}     7,584
+
+{txt}R-sq:{col 49}Obs per group:
+     within  = {res}0.0051{col 63}{txt}min{col 67}={col 69}{res}         1
+{txt}     between = {res}0.0014{col 63}{txt}avg{col 67}={col 69}{res}       8.2
+{txt}     overall = {res}0.0032{col 63}{txt}max{col 67}={col 69}{res}        15
+
+{txt}{col 49}F({res}5{txt},{res}54960{txt}){col 67}={col 70}{res}    56.33
+{txt}corr(u_i, Xb){col 16}= {res}-0.0459{txt}{col 49}Prob > F{col 67}={col 73}{res}0.0000
+
+{txt}{hline 14}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}       mental{col 15}{c |}      Coef.{col 27}   Std. Err.{col 39}      t{col 47}   P>|t|{col 55}     [95% Con{col 68}f. Interval]
+{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 10}age {c |}{col 15}{res}{space 2} .0045017{col 27}{space 2} .0008475{col 38}{space 1}    5.31{col 47}{space 3}0.000{col 55}{space 4} .0028406{col 68}{space 3} .0061628
+{txt}{space 8}woman {c |}{col 15}{res}{space 2}        0{col 27}{txt}  (omitted)
+{space 7}couple {c |}{col 15}{res}{space 2}-.0756434{col 27}{space 2} .0159661{col 38}{space 1}   -4.74{col 47}{space 3}0.000{col 55}{space 4}-.1069371{col 68}{space 3}-.0443497
+{txt}{space 4}separated {c |}{col 15}{res}{space 2} .3951068{col 27}{space 2} .0293305{col 38}{space 1}   13.47{col 47}{space 3}0.000{col 55}{space 4} .3376188{col 68}{space 3} .4525947
+{txt}{space 5}divorced {c |}{col 15}{res}{space 2}-.0378425{col 27}{space 2} .0263161{col 38}{space 1}   -1.44{col 47}{space 3}0.150{col 55}{space 4}-.0894224{col 68}{space 3} .0137373
+{txt}never_married {c |}{col 15}{res}{space 2} .0160869{col 27}{space 2} .0378081{col 38}{space 1}    0.43{col 47}{space 3}0.670{col 55}{space 4}-.0580171{col 68}{space 3}  .090191
+{txt}{space 8}_cons {c |}{col 15}{res}{space 2}-.1891764{col 27}{space 2}  .035558{col 38}{space 1}   -5.32{col 47}{space 3}0.000{col 55}{space 4}-.2588704{col 68}{space 3}-.1194825
+{txt}{hline 14}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+      sigma_u {c |} {res}  .6746844
+      {txt}sigma_e {c |} {res} .74201635
+          {txt}rho {c |} {res} .45257982{txt}   (fraction of variance due to u_i)
+{hline 14}{c BT}{hline 64}
+F test that all u_i=0: F({res}7583{txt}, {res}54960{txt}) = {res}5.69{col 62}{txt}Prob > F = {res}0.0000
+{txt}
+{com}. 
+. *xtset year
+. 
+{txt}end of do-file
+
+{com}. do "C:\Users\Kun\AppData\Local\Temp\STD00000000.tmp"
+{txt}
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}F:\Econ 665\class practice\new\november6.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}10 Dec 2017, 01:03:06
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
