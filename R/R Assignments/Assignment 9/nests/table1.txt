@@ -1,0 +1,7 @@
+                       Df F value Pr(>F)
+(Intercept)             1 937.183  0.000
+SpeciesF                1   4.409  0.041
+Nest.contentF           2   0.600  0.553
+Butts.weight            1  61.841  0.000
+SpeciesF:Nest.contentF  2   2.004  0.146
+Residuals              48      NA     NA

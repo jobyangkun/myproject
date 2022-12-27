@@ -1,0 +1,159 @@
+/*****************************************************/
+/*                                                   */
+/*  Schwarz, Carl   123456789                        */
+/*  Stat 340, Spring 2015                            */
+/*  Assignment 5, Part 2  - Accidents                   */
+/*
+/*  Impact of speed and precipitation on accident fatality rates.
+/*                                                   */
+/*****************************************************/
+
+/* Assignment 05, Part 02 - Accident data */
+
+/* Personal injury road accidents in Great Britian in 2010 */
+/* The effect of speed and precipitation
+   on the fatality rate */
+
+dm 'log'    clear;
+dm 'output' clear;
+proc datasets kill; run;
+footnote ' ';
+
+title justify=left 'Schwarz, Carl 123456789' justify=center 'Assignment 05 Part 02 - Accidents';
+title2 'Personal injury accidents in GB in 2010';
+options orientation=landscape;
+ods pdf file='assign05-part02-accidents-speed.pdf' style=styles.printer;
+
+proc import file='road-accidents-2010.csv' dbms=csv out=accidents replace;
+run;
+
+proc print data=accidents(obs=10);
+run;
+
+proc tabulate data=accidents;
+   class speed_limit urban_or_rural_area;
+   table urban_or_rural_area, speed_limit*n*f=6.0;
+run;
+
+data accidents;
+  set accidents;
+
+  length fatal $4;
+  fatal = ' ';
+  if accident_severity = 1      then fatal = 'yes';
+  if accident_severity in (2,3) then fatal = 'no';
+
+  length light $5;
+  light = ' ';
+  if light_conditions = 1          then light='light';
+  if light_conditions in (4,5,6,7) then light='dark';
+
+  length precip wind $5;
+  precip = ' '; wind=' ';
+  if weather_conditions = 1 then do;  precip = 'none'; wind='none'; end;
+  if weather_conditions = 2 then do;  precip = 'rain'; wind='none'; end;
+  if weather_conditions = 3 then do;  precip = 'snow'; wind='none'; end;
+  if weather_conditions = 4 then do;  precip = 'none'; wind='high'; end;
+  if weather_conditions = 5 then do;  precip = 'rain'; wind='high'; end;
+  if weather_conditions = 6 then do;  precip = 'snow'; wind='high'; end;
+
+  length road $4;
+  road = ' ';
+  if road_surface_conditions = 1  then road = 'dry';
+  if road_surface_conditions in (2,5) then road = 'wet';
+  if road_surface_conditions in (3,4) then road = 'ice';
+
+  length area $10.;
+  area = 'undefined';
+  if urban_or_rural_area = 1 then area = 'urban';
+  if urban_or_rural_area = 2 then area = 'rural';
+
+  length speed $10.;
+  speed = 'undefined';
+  if 0  < speed_limit <= 30  then speed = '00+-30';
+  if 30 < speed_limit <= 50  then speed = '30+-50';
+  if 50 < speed_limit <= 100 then speed = '50+';
+
+  drop dummy;
+  keep accident_severity light_conditions number_of_vehicles weather_conditions road_surface_conditions fatal light precip wind road;
+  keep urban_or_rural_area area speed_limit speed;
+run;
+
+proc print data=accidents(obs=20) split="_";
+   title3 'first few records';
+run;
+
+proc tabulate data=accidents missing;
+   class speed_limit speed  urban_or_rural_area area fatal;
+   table urban_or_rural_area, speed_limit*n*f=6.0;
+   table speed_limit, speed*n*f=7.0;
+   table urban_or_rural_area, area*n*f=7.0;
+   table area*speed, fatal*n*f=7.0;
+run;
+
+/* Check the basic summary statistics */
+proc tabulate data=accidents missing;
+   title3 'summary of codes used';
+   class Accident_Severity Number_of_Vehicles fatal light_conditions  weather_conditions road_surface_conditions
+         light precip wind road;
+   table Accident_severity ALL, fatal*   n*f=7.0;
+   table light_conditions, light*n*f=7.0;
+   table weather_conditions, (precip wind)*n*f=7.0;
+   table road_surface_conditions,     road*n*f=7.0;
+run;
+
+
+/* Do the analysis to see which factors are associated with fatalities */
+proc genmod data=accidents descending;
+  title3 'what factors contribute to fatality rates';
+  class area speed;
+  model fatal = area speed area*speed/ dist=binomial link=logit type3;
+  lsmeans area*speed / cl ilink ;
+  ods output lsmeans=myodds;
+  ods output lsmeandiffs=mylsmeansdiff;
+run;
+
+proc print data=myodds;
+   title2 'Estimated logodds of fatality by weather and road conditions';
+run;
+
+
+ods rtf file='assign05-part02-speed-plot.rtf';
+
+proc print data=myodds split=' ' label noobs;
+   title2 'Estimated logodds of fatality by weather and road conditions';
+   var area speed estimate lower upper mu lowermu uppermu;
+   label area='Area';
+   label speed='Speed';
+   attrib estimate label='Log(odds) fatality' format=7.1;
+   attrib lower    label='log(odds) fatality lcl' format=7.1;
+   attrib upper    label='log(odds) fatality ucl' format=7.1;
+   attrib mu       label='Prob fatality' format=7.3;
+   attrib lowermu  label='Prob fatality lcl' format=7.3;
+   attrib uppermu  label='Prob fatality ucl' format=7.3;
+run;
+
+proc sgplot data=myodds ;
+   title3 'Estimated log(odds) of fatality by speed limit and urban/rural along with 95% ci for odds';
+   scatter x=speed y=estimate  / group=area;
+   series  x=speed y=estimate  / group=area;
+   highlow x=speed low=Lower high=upper;
+   xaxis label='Speed limit at location of accident' offsetmin=0.10 offsetmax=0.10;
+   yaxis label='log(Odds) of a fatality';
+run;
+
+proc sgplot data=myodds ;
+   title3 'Probability of a fatality by speed limit and urban/rural along with 95% ci';
+   scatter x=speed y=mu  / group=area;
+   series  x=speed y=mu  / group=area;
+   highlow x=speed low=Lowermu high=uppermu;
+   xaxis label='Speed limit at location of accident' offsetmin=0.10 offsetmax=0.10;
+   yaxis label='Probability of a fatality with 95% ci';
+run;
+
+ods rtf close;
+
+
+
+
+ods pdf close;

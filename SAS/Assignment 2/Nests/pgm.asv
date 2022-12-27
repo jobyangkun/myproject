@@ -1,0 +1,204 @@
+/*****************************************************/
+/*                                                   */
+/*  Schwarz, Carl   123456789                        */
+/*  Stat 340, Spring 2013                            */
+/*  Assignment 2, Part 3  - Cigarette Butts and Nests*/
+
+/*  Try and reproduce some of the output in the paper.
+/*                                                   */
+/*****************************************************/
+
+/* Assignment 02, Part 03 - Analysis of Cigarette Butts in Nests */
+
+dm 'output' clear;
+dm 'log'    clear;
+proc datasets kill; run;
+footnote;
+
+title justify=left 'Schwarz, Carl 123456789' justify=center 'Assignment 02 Part 03 - Cigarette Butts and Nests';
+options orientation =landscape;
+ods pdf file='assign02-part03-nests.pdf' style=styles.printer;
+
+proc import file='nests.xls' dbms=xls out=nestinfo replace;
+   sheet = 'Correlational';
+   guessingrows = 9999;
+run;
+
+proc print data=nestinfo(obs=10);
+   title2 'part of the raw data';
+run;
+
+
+
+/* Summary table of number of nests measured by species and status */
+proc tabulate data=nestinfo;
+   title2 'summary of number of nests measured';
+   class species nest_content;
+   table nest_content, species*n*f=5.0;
+run;
+
+data nestinfo;
+   set nestinfo;  /* access the previous dataset */
+   length ButtsPresent $4;
+   buttspresent = 'no';
+   if butts_weight > 0 then buttspresent = 'yes';
+run;
+
+proc print data=nestinfo(obs=10);
+   title2 'verify the presence/absence of butts';
+run;
+
+/* Find the percentage of nests with butts */
+proc sort data=nestinfo; by species; run;
+proc freq data=nestinfo;
+   title2 'proportion of nests with butts';
+   by species;
+   table ButtsPresent / binomial( level='yes');
+   output out=nestprop2 binomial;
+   ods output binomialprop=nestprop;
+run;
+
+proc print data=nestprop;
+   title2 'ods dataset created';
+run;
+
+proc print data=nestprop2;
+   title2 'output dataset created';
+run;
+
+/* the nestprop2 is more convenient for plotting as everything is on one line */
+proc sgplot data=nestprop2 noautolegend;
+   title2 'comparsion of proportion of nests with cigarette butts';
+   scatter y=_bin_ x=Species;
+   highlow x=species low=l_bin high=u_bin;
+   xaxis label='Species';
+   yaxis label='Proportion with butts';
+run;
+
+
+/* Chisquare test that proportions are equal */
+proc freq data=nestinfo;
+   title2 'chi square test for equal proportions';
+   table species*buttspresent / chisq nocol nopercent;
+run;
+
+
+
+/* Find the average weight of butts by species and create a suitable plot */
+proc univariate data=nestinfo cibasic;
+   title2 'Get the mean and ci for each species';
+   by species;
+   var butts_weight;
+   ods output basicintervals=mycibuttweight;
+run;
+
+proc print data=mycibuttweight;
+run;
+
+proc sgplot data=mycibuttweight noautolegend;
+   title2 'comparsion of mean weight of cigarette butts';
+   where parameter='Mean';
+   scatter y=estimate x=Species;
+   highlow x=species low=lowercl high=uppercl;
+   xaxis label='Species';
+   yaxis label='Mean weight of butts';
+run;
+
+proc ttest data=nestinfo;
+   title2 'comparison of mean butt weights';
+   class species;
+   var butts_weight;
+run;
+
+
+
+/* Compare the average number of mites by species and create a suitable plot */
+proc univariate data=nestinfo cibasic;
+   by species;
+   var number_of_mites;
+   ods output basicintervals=myciNumMites;
+run;
+
+proc print data=myciNumMites;
+run;
+
+proc sgplot data=myciNumMites noautolegend;
+   title2 'comparsion of mean number of mites';
+   where parameter='Mean';
+   scatter y=estimate x=Species;
+   highlow x=species low=lowercl high=uppercl;
+   xaxis label='Species';
+   yaxis label='Mean number of mites';
+run;
+
+proc ttest data=nestinfo;
+   title2 'comparison of number of mites';
+   class species;
+   var number_of_mites;
+run;
+
+
+
+
+
+/* Plot the number of mites against the weight of butts */
+proc sgplot data=nestinfo;
+   title2 'number of mites vs weight of butts';
+   scatter x=butts_weight y=number_of_mites / group=species;
+run;
+
+proc sgplot data=nestinfo;
+   title2 'number of mites vs weight of butts with a SPLINE curve';
+   scatter x=butts_weight y=number_of_mites / group=species;
+   pbspline x=butts_weight y=number_of_mites;
+run;
+
+
+
+/* Create a regression line of log(number of mites) vs butt weight */
+data nestinfo;
+   set nestinfo;
+   log_number_of_mites = log(number_of_mites);
+run;
+
+proc reg data=nestinfo;
+   title2 'regression of log(number of mites) vs butt weight';
+   model log_number_of_mites = butts_weight;
+   output out=modelfit pred=estmean_log lclm=lclm_log uclm=uclm_log;
+run;
+
+proc print data=modelfit(obs=10);
+   title2 'part of the predicted dataset';
+run;
+
+data modelfit;
+   set modelfit;
+   estmean = exp(estmean_log);
+   lclm    = exp(lclm_log);
+   uclm    = exp(uclm_log);
+run;
+
+proc print data=modelfit;
+   title2 'after ANTI-log transform';
+run;
+
+
+proc sort data=modelfit; by butts_weight; run;
+ods rtf file='assign02-part3-nests.rtf';
+proc sort data=modelfit; by butts_weight; run;
+proc sgplot data=modelfit;
+   title2 'Fitted regression line of log(number mites) vs butt weight';
+   band    x=butts_weight upper=uclm lower=lclm;
+   scatter x=butts_weight y=number_of_mites / group=species;
+   series  x=butts_weight y=estmean;
+run;
+ods rtf close;
+
+
+
+
+
+
+
+
+ods pdf close;

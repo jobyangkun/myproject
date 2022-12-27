@@ -1,0 +1,7 @@
+City  Temp
+Winnipeg -35C
+Seattle 15F
+Vancouver 8C
+Maui   85F
+Taipei  23c
+LosAngelos 85f

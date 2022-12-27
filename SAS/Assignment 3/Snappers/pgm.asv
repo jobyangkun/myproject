@@ -1,0 +1,191 @@
+/******************************************************************************/
+/*   Assignment 03, Part 01, Short Snappers
+/*   SCHWARZ, Carl 123456789
+/*
+/*   Do some short snappers for review and practice for a term test
+/*
+/*******************************************************************************/
+
+dm 'output' clear;
+dm 'log'    clear;
+proc datasets kill; run;
+footnote " ";
+
+title .footnote;
+
+title justify=left 'Schwarz, Carl 123456789' justify=center 'Assignment 03 Part 01 - Short Snappers';
+options orientation =landscape;
+ods pdf file='assign03-part01-snappers.pdf' style=styles.printer;
+
+/***************************************************************************************/
+/* Example of reading in data that is on multiple records */
+data ds01;
+   infile 'assign03-part01-ds01.txt' firstobs=2 missover ;
+   length name $30 sex $1 FavTvShow $40 FavSport $40;
+   input name $ sex $ birthdate:yymmdd10. / height FavTvShow FavSport SysBloodPres;
+   format birthdate yymmdd10.;
+run;
+
+proc print data=ds01;
+   title2 'Example of reading in data that is on multiple records';
+run;
+
+
+
+/***************************************************************************************/
+/*  Creating side-by-side confidence interval plots */
+
+data ds02;
+   infile 'assign03-part01-ds02.txt' firstobs=2 missover ;
+   length faculty $30;
+   input faculty $ n mean sd;
+   se = sd/ sqrt(n);
+   lcl = mean -2*se;
+   ucl = mean + 2*se;
+run;
+
+proc print data=ds02;
+   title2 'summer earnings';
+run;
+
+proc sgplot data=ds02;
+   title2 'Summer Earning';
+   scatter x=faculty y=mean;
+   highlow x=faculty low=lcl high=ucl;
+   xaxis label='Faculty' offsetmin=0.05 offsetmax=0.05;
+   yaxis label='Mean summer earnings with 95% ci';
+run;
+
+
+/***************************************************************************************/
+/*  Dealing with censored values */
+
+data ds03;
+   infile 'assign03-part01-ds03.txt' firstobs=1 missover ;
+   length ccoliform cturbidity cozone $30;
+   input SampleDate:yymmdd10. ccoliform $ cturbidity $ cozone $;
+   format SampleDate yymmdd10.;
+run;
+
+proc print data=ds03;
+   title2 'Water quality data before fixups';
+run;
+
+data newds03;
+   set ds03;
+   /* deal with censoring on the coliform variable */
+   length lc_coliform lc_turbidity rc_turbidity $4. detectlimit $30.;
+   if index(ccoliform,"<")>0 then do; /* censored values */
+      lc_coliform = 'yes';
+      whereless = index(ccoliform,"<");
+      detectlimit = substr(ccoliform,whereless+1);
+      coliform = input(detectlimit,  f30.0);
+   end;
+   if index(ccoliform,"<") = 0 then do; /* regular value */
+      lc_coliform = 'no';
+          coliform = input(ccoliform, f30.0);
+   end;
+
+   if index(cturbidity,"<")>0 then do; /* left censored values */
+      lc_turbidity = 'yes';
+          rc_turbidity = 'no';
+      whereless = index(cturbidity,"<");
+      detectlimit = substr(cturbidity,whereless+1);
+      turbidity = input(detectlimit,  f30.0);
+   end;
+   if index(cturbidity,"+")>0 then do; /* right censored values */
+      lc_turbidity = 'no';
+          rc_turbidity = 'yes';
+      whereplus = index(cturbidity,"+");
+      detectlimit = substr(cturbidity,1,whereplus-1);
+      turbidity = input(detectlimit,  f30.0);
+   end;
+   if index(cturbidity, "<") =0 AND
+      index(cturbidity, "+") =0 then do;  /* not censored */
+      lc_turbidity = 'no';
+          rc_turbidity = 'no';
+          turbidity = input(cturbidity, f30.0);
+   end;
+
+   /* separate out the ozone values. The - separates the lower and upper bound */
+   whereminus = index(cozone,'-');
+   lower_ozone = input(substr(cozone,1,whereminus-1), f30.);
+   upper_ozone = input(substr(cozone,whereminus+1  ), f30.);
+
+   /* drop intermediate variables */
+   drop whereless whereplus whereminus detectlimit;
+run;
+
+proc print data=newds03;
+   title2 'Water quality data after fixups';
+   var SampleDate ccoliform coliform lc_coliform   cturbidity turbidity lc_turbidity rc_turbidity
+       cozone lower_ozone upper_ozone;
+run;
+
+
+/***************************************************************************************/
+/*  Dealing with censored values */
+data ds04;
+   infile 'assign03-part01-ds04.txt' firstobs=1 missover ;
+   length sex name $30;
+   input year sex name final_grade;
+run;
+
+proc print data=ds04;
+   title2 'raw data for part 4';
+run;
+
+/*get the estimates for each year */
+proc sort data=ds04; by year sex; run;
+proc means data=ds04 noprint;
+   by year sex;
+   var final_grade;
+   output out=mean_grades mean=mean_grade stderr=se lclm=lclm uclm=uclm;
+run;
+proc print data=mean_grades label split=" ";
+   title2 'mean grades by year and sex';
+   var year sex mean_grade lclm uclm;
+   label year='Year';
+   attrib sex label='Sex';
+   attrib mean_grade label="Mean Grade"   format=7.1;
+   attrib lclm       label="Lower 95% ci" format=7.1;
+   attrib uclm       label='Upper 95% ci' format=7.1;
+   footnote ' ';
+run;
+
+
+/* compare mean grades over time */
+proc sort data=ds04; by year; run;
+
+proc glm data=ds04;
+   title2 'Compare grades between sexes in each year';
+   by year;
+   class sex;
+   model final_grade = sex;
+   lsmeans sex / pdiff cl stderr adjust=tukey;
+   ods output LSMeanDiffCL = lsmeansdiff;
+run;
+
+proc print data=lsmeansdiff label split=' ';
+   title2 'estimated differences';
+   var year difference lowercl uppercl;
+   attrib year label='Year';
+   attrib difference label='Diff in Mean' format=7.1;
+   attrib lowercl    label='Lower 95% cl' format=7.1;
+   attrib uppercl    label='Upper 95% cl' format=7.1;
+   footnote ' ';
+run;
+
+proc sgplot data=lsmeansdiff;
+   title2 'Difference in grades over time';
+   scatter x=year y=difference;
+   highlow x=year low=lowercl high=uppercl;
+   yaxis label='Estimated differece in mean grades with 95% ci';
+   xaxis integer offsetmin=0.10 offsetmax=0.10;
+   refline 0 / axis=y;
+   footnote ' ';
+run;
+
+
+
+ods pdf close;

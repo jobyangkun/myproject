@@ -1,0 +1,124 @@
+/*****************************************************/
+/*                                                   */
+/*  Schwarz, Carl   123456789                        */
+/*  Stat 340, Spring 2015                            */
+/*  Assignment 1, Part 3  - ATUS                     */
+/*                                                   */
+/* Read in the time of use dataset, find the average
+/* time of tv watching and proportion of people watching
+/* tv ad plot these over time */
+/*
+/*****************************************************/
+
+/* Assignment 1, Part 3 - STUS */
+
+dm 'output' clear;
+dm 'log'    clear;
+proc datasets kill;
+footnote;
+
+title justify=left 'Schwarz, Carl 123456789' justify=center 'Assignment 1 Part 3 - ATUS';
+title2 'American Time of Use Study';
+
+
+dm 'output' clear;
+dm 'log'    clear;
+proc datasets kill; run;
+footnote ' ';
+
+
+%include 'atussum_0313.sas';
+
+proc print data=atussum_0313(obs=5); /* Don't include with output because too large */
+   title2 'part of the raw data';
+run;
+
+
+options orientation=landscape;
+ods pdf file='assign01-part03-atus.pdf' style=styles.printer;
+
+/* Add some derived variables for the TOTAL time watching TV and
+   if watched at all during this day */
+data atussum_0313;
+   set atussum_0313;
+   totaltv = t120304 + t120303; /* total tv time (minutes) */
+   watchtv = 0;  /* create an indicator variable */
+   if totaltv >0 then watchtv = 1;
+run;
+
+/* do some basic error checking for bad values etc */
+ods rtf file='totaltv-stats.rtf';
+proc univariate data=atussum_0313;
+   var totaltv;
+   histogram totaltv / endpoints=0 to 1440 by 30;
+run;
+ods rtf close;
+
+/* some people claimed to watch tv for very long periods, almost 24 hrs */
+proc print data=atussum_0313;
+   title2 'People with very long TV watching times';
+   where totaltv >= 1200;
+   var TUCASEID t120304  t120303 totaltv;
+run;
+
+/* These large TV times are unrealisitic (more than 20 hrs!), but they will be retained for the further anaysis */
+
+
+/* get some basic tabulatons  - notice we weight by TUFNWGTP because of complex sampling design */
+proc tabulate data=atussum_0313 missing;
+   title2 'some preliminary tabulations';
+   class tuyear tudiaryday;
+   var totaltv TUFNWGTP watchtv;
+   table tuyear='Year',  tudiaryday*n*f=5.0;
+   table tuyear='Year', totaltv*(n mean max min)*f=5.0;
+   table tuyear='Year', watchtv*(n mean)*f=5.3;
+   table tuyear='Year', TUFNWGTP*(n sum max min);
+   weight TUFNWGTP;
+run;
+
+
+/********************************************************************************************/
+/* Look at mean tv watching and proportion of tv watching over time */
+/* We need weighted averages beause of the complex sampling design */
+proc sort data=atussum_0313; by tuyear; run;
+
+
+proc means data=atussum_0313 noprint;
+  by tuyear;
+  var   totaltv watchtv;  /* total television watching and indicator if watched*/
+  weight TUFNWGTP;
+  output out=meantv
+         mean  =meantv  proptv
+run;
+
+proc print data=meantv;
+   title2 'Mean TV/prop of tv watching on a yearly basis';
+run;
+
+data plotdata;
+   set meantv;
+   tuyear2 = tuyear + 0.1;
+run;
+ods rtf file='tus-change.rtf';
+proc sgplot data=plotdata noautolegend;
+   title2 'Mean TV/prop of population watching over time';
+   scatter x=tuyear y=meantv;
+   series  x=tuyear y=meantv ;
+   series  x=tuyear2 y=proptv / y2axis lineattrs=(color=red pattern=shortdash);
+   highlow x=tuyear high=meantv_ucl low=meantv_lcl;
+   *highlow x=tuyear2 high=proptv_ucl low=proptv_lcl / y2axis;
+   reg     x=tuyear y=meantv;
+   reg     x=tuyear2 y=proptv / y2axis lineattrs=(color=red pattern=shortdash);
+   xaxis label='Year' offsetmin=.05 offsetmax=.05 integer;
+   yaxis label='Mean total TV watching (minutes/day) with 95% ci';
+   y2axis label='Prop of population watching TV with 95% ci' min=0 max=1;
+run;
+ods rtf close;
+
+/* do a formal regression analysis */
+proc reg data=meantv;
+   model meantv = tuyear/ clb;
+run;
+
+
+ods pdf close;

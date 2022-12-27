@@ -1,0 +1,175 @@
+/*****************************************************/
+/*                                                   */
+/*  Schwarz, Carl   123456789                        */
+/*  Stat 340, Spring 2015                            */
+/*  Assignment 5, Part 1  - Cereal                   */
+/*
+/*  Do a simulation study to investigate the impact of
+/*  a log-normal distribution on the residuals on the
+/*  performance of the estimators in a linear regression.
+/*                                                   */
+/*****************************************************/
+
+/* Assignment 5, Part 1 - Analysis of cereal data */
+
+dm 'output' clear;
+dm 'log'    clear;
+proc datasets kill;
+footnote;
+
+title justify=left 'Schwarz, Carl 123456789' justify=center 'Assignment 05 Part 01 - Cereal';
+options orientation =landscape;
+ods pdf file='assign05-part01-cereal.pdf' style=styles.printer;
+
+data cereal;
+   infile 'cereal.csv' missover firstobs=2 dlm=',' dsd;
+   length name $30 manufacturer $30 type $8 ;
+   input name $ manufacturer $ type $ calories protein
+         fat sodium fiber complex_carbs sugars shelf potassium vit_rda weight cups_per_serving;
+   array variables(*) calories protein fat sodium fiber complex_carbs sugars shelf potassium vit_rda weight cups_per_serving;
+   do i=1 to dim(variables);
+      if variables(i) = -1 then variables(i) = .;
+   end;
+   drop i;
+   attrib calories label='Calories' format=7.0;
+run;
+
+proc print data=cereal(obs=10);
+   title2 'part of the raw data';
+run;
+
+
+/* Create the X space for the simulation */
+data ModelSpace;
+   set cereal;
+   keep protein fat complex_carbs sugars;
+run;
+
+proc print data=ModelSpace(obs=10);
+   title2 'The model (design) space of the simulation';
+run;
+
+
+/* What are the paremeters of my simulation */
+/* The slopes are taken from http://en.wikipedia.org/wiki/Food_energy */
+/* The variance of the noise is taken from Assignment 3, Part 1 on the multiple regression */
+%let beta_0             = 0;
+%let beta_fat           = 9;
+%let beta_protein       = 4;
+%let beta_complex_carbs = 4;
+%let beta_sugars        = 4;
+
+%let sigma              = 5; /* the VARIANCE is 25 */
+
+%let nsim = 1000;
+data simdata_no_violations;
+   call streaminit(314159);
+   do sim=1 to &nsim;
+      do mycereal=1 to ncereals;
+         set modelspace point=mycereal  nobs=ncereals; /* get the X values */
+         mu_calories = &beta_0 + &beta_fat*fat + &beta_protein *protein +
+                       &beta_complex_carbs*complex_carbs  +
+                       &beta_sugars*sugars;
+             epsilon = rand('normal',0,&sigma);
+         calories = mu_calories + epsilon; /* add the noise to the mean */
+         output;
+      end;
+   end;
+   stop;
+run;
+
+proc print data=simdata_no_violations(obs=100);
+   title2 'part of the simulated dataset with NO violations of assumptions';
+run;
+
+/* analyse the simulated dataset*/
+proc reg data=simdata_no_violations outest=simest_no_violations noprint;
+  by sim;
+  model calories = fat protein complex_carbs sugars;
+run;
+
+proc print data=simest_no_violations(obs=10);
+   title2 'some of the estimated slopes with NO violations of assumptions';
+run;
+
+/* Look to see if the estimates are unbiased */
+proc univariate data=simest_no_violations
+   location = &beta_0 &beta_fat &beta_protein &beta_complex_carbs &beta_sugars;
+   title3 'check to see if the estimates are unbiased';
+   var intercept fat protein complex_carbs sugars;
+   histogram / normal;
+run;
+
+/* create a plot of the sampling distribution for the slope associated with fat */
+ods rtf file='assign05-part01-sampdist-fat-no-violations.rtf';
+proc sgplot data=simest_no_violations noautolegend;
+   title2 'Sampling distribution of slope associated with fat with NO violations of assumptions';
+   histogram fat;
+   density fat / type=normal;
+   refline &beta_fat / axis=x lineattrs=(thickness=5)
+           label='Population slope';
+   footnote 'Reference line drawn at population slope';
+   xaxis label='Estimated slopes for calories/gram of fat from simulation study'
+         min=6 max=12;
+run;
+ods rtf close;
+
+
+/***************************************** VIOLATIONS of ASSUMPTION ************************/
+
+data simdata_violations;
+   call streaminit(314159);
+   do sim=1 to &nsim;
+      do mycereal=1 to ncereals;
+         set modelspace point=mycereal  nobs=ncereals; /* get the X values */
+         mu_calories = &beta_0 + &beta_fat*fat + &beta_protein *protein +
+                       &beta_complex_carbs*complex_carbs  +
+                       &beta_sugars*sugars;
+         W = rand('lognormal');
+         epsilon = W - exp(.5);  /* get a mean of 0 - why? */
+         epsilon = epsilon / sqrt( (exp(1)-1)*exp(1)) * &sigma;
+         calories = mu_calories + epsilon; /* add the noise to the mean */
+         output;
+      end;
+   end;
+   stop;
+run;
+
+proc print data=simdata_violations(obs=10);
+   title2 'part of the simulated dataset with violations of assumptions';
+run;
+
+/* analyse the simulated dataset*/
+proc reg data=simdata_violations outest=simest_violations noprint;
+  by sim;
+  model calories = fat protein complex_carbs sugars;
+run;
+
+proc print data=simest_violations(obs=10);
+   title2 'some of the estimated slopes with violations of assumptions';
+run;
+
+/* Look to see if the estimates are unbiased */
+proc univariate data=simest_violations
+   location = &beta_0 &beta_fat &beta_protein &beta_complex_carbs &beta_sugars;
+   title3 'check to see if the estimates are unbiased';
+   var intercept fat protein complex_carbs sugars;
+   histogram / normal;
+run;
+
+/* create a plot of the sampling distribution for the slope associated with fat */
+ods rtf file='assign05-part01-sampdist-fat-violations.rtf';
+proc sgplot data=simest_violations noautolegend;
+   title2 'Sampling distribution of slope associated with fat with violations of assumptions';
+   histogram fat;
+   density fat / type=normal;
+   refline &beta_fat / axis=x lineattrs=(thickness=5)
+           label='Population slope';
+   footnote 'Reference line drawn at population slope';
+   xaxis label='Estimated slopes for calories/gram of fat from simulation study'
+         min=6 max=12;
+run;
+ods rtf close;
+
+
+ods pdf close;
